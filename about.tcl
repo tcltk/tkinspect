@@ -12,7 +12,7 @@ dialog about {
 	global tkinspect tkinspect_library
 	wm withdraw $self
 	wm transient $self .
-	pack [frame $self.border -relief ridge -bd 4]
+	pack [frame $self.border -relief ridge -bd 4] -expand 1 -fill both
 	label $self.title -text "tkinspect" -font $slot(boldFont)
 	label $self.ver \
 	    -text "Release $tkinspect(release) ($tkinspect(release_date))" \
@@ -21,10 +21,15 @@ dialog about {
 	    -font $slot(obliqueFont)
 	frame $self.mug -bd 4
 	label $self.mug.l -text "Sam Shen <slshen@lbl.gov>"
-	label $self.mug.bm -bitmap @$tkinspect_library/sls.xbm -bd 2 \
+	global about_priv
+	if ![info exists about_priv(mug_image)] {
+	    set about_priv(mug_image) \
+		[image create photo -file $tkinspect_library/sls.ppm]
+	}
+	label $self.mug.bm -image $about_priv(mug_image) -bd 2 \
 	    -relief sunken
-	pack $self.mug.l $self.mug.bm -in $self.mug \
-	    -side left -fill both -expand yes
+	pack $self.mug.l -side left -fill both -expand yes
+	pack $self.mug.bm -fill none
 	button $self.ok -text "Ok" -command "destroy $self"
 	pack $self.title $self.ver $self.com $self.mug \
 	    -in $self.border -side top -fill x
