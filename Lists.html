@@ -10,18 +10,30 @@ The lists are the listboxes just below the <b>Command:</b> entry.
 By default, there are three lists:
 
 <ul>
-  <li> <a href=Procs.html>Procs</a> contains a list of all the Tcl
+  <li> <a href=Procs.html>Procs</a> is a list of all the Tcl
        procedures in the target application.
-  <li> <a href=Globals.html>Globals</a> contains a list of the global
+  <li> <a href=Globals.html>Globals</a> is a list of the global
        variables of the target application.
-  <li> <a href=Windows.html>Windows</a> contains a list of the windows
+  <li> <a href=Windows.html>Windows</a> is a list of the windows
        of the target application.
+  <li> <a href=Images.html>Images</a> is a list of the images
+       of the target application.
+  <li> <a href=Menus.html>Menus</a> is a list of the <tt>menu</tt> widgets
+       of the target application.
+  <li> <a href=Canvases.html>Canvases</a> is a list of the
+       <tt>canvas</tt> widgets of the target application.
 </ul>
 
+By default, only the <b>Procs</b>, <b>Globals</b>, and <b>Windows</b>
+lists are shown.  You can change this by adding
+<tt>tkinspect_show_list</tt> and <tt>tkinspect_remove_list</tt>
+commands to <tt>.tkinspect_init</tt> or by setting the option
+<tt>*Tkinspect_main.default_lists</tt>.<p>
+
 Each list also has a menu in the menu bar.  (The menu can also be
-brought up by pressing button 3 in the list.)  The menu contains a set
-of standard operations, followed by list-specific operations (if any
-are available.)  The standard list operations are:
+brought up by pressing <tt>button-3</tt> in the list.)  The menu
+contains a set of standard operations, followed by list-specific
+operations (if any are available.)  The standard list operations are:
 
 <ul>
   <li> <b>Show a X..</b> brings up a dialog that prompts for the name
@@ -32,14 +44,16 @@ are available.)  The standard list operations are:
        the list filter.  The list will only displays those items that
        either match or don't match a set of patterns.  (The default
        list of patterns varies for each list type.)
+  <li> <b>Update This List</b> updates the contents of this list.
+       All the lists can be updated via the <b>File/Update
+       Lists</b> menu item.
+  <li> <b>Remove This List</b> removes this list from the tkinspect
+       window.  A list can also be removed by deselecting its checkbox
+       in the <b>File</b> menu.
 </ul>
-
-A list can be removed by deselecting its checkbox in the <b>File</b>
-menu.  The lists can be updated by selecting the <b>File/Update
-Lists</b> menu item.
 
 <hr>
 <!-- hhmts start -->
-Last modified: Wed Jun 21 01:56:22 1995
+Last modified: Wed Jun 21 15:32:14 1995
 <!-- hhmts end -->
 </body> </html>
