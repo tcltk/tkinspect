@@ -75,10 +75,10 @@ label .title2 -text "Release $tkinspect(release) ($tkinspect(release_date))" \
     -font -*-helvetica-medium-r-*-*-12-*
 pack .title .title2 -side top
 
-text .instructions -relief ridge -bd 4 -width 20 -height 3 -wrap word \
+text .instructions -relief ridge -bd 4 -width 20 -height 4 -wrap word \
     -takefocus 0
 .instructions insert 1.0 \
-{Fill out the pathnames below and press the install button.  Any errors will appear in log window below.
+{Fill out the pathnames below and press the install button.  Any errors will appear in log window below.  If you wish to demo tkinspect w/o installing it, try "wish -f tkinspect.tcl".
 }
 pack .instructions -side top -fill both -expand 1
 set prefix /usr/local
@@ -148,9 +148,9 @@ proc install {} {
     if ![install_files $libdir {
 	about.tcl defaults.tcl lists.tcl globals_list.tcl procs_list.tcl
 	windows_list.tcl value.tcl stl.tcl sls.xbm version.tcl
-	help.tcl cmdline.tcl tclIndex
+	help.tcl cmdline.tcl interface.tcl tclIndex
 	Intro.html Lists.html Procs.html Globals.html Windows.html
-	Value.html Notes.html Contents.html
+	Value.html Miscellany.html Notes.html WhatsNew.html ChangeLog.html
     }] {
 	return
     }
