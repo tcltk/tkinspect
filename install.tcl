@@ -147,7 +147,7 @@ proc install {} {
     }
     if ![install_files $libdir {
 	about.tcl defaults.tcl lists.tcl globals_list.tcl procs_list.tcl
-	windows_list.tcl value.tcl stl.tcl sls.xbm version.tcl
+	windows_list.tcl images_list.tcl value.tcl stl.tcl sls.xbm version.tcl
 	help.tcl cmdline.tcl interface.tcl tclIndex
 	Intro.html Lists.html Procs.html Globals.html Windows.html
 	Value.html Miscellany.html Notes.html WhatsNew.html ChangeLog.html
