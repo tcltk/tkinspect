@@ -1,0 +1,45 @@
+<html> <head>
+<title>Value Window</title>
+<!-- $Id$ -->
+</head>
+
+<body>
+<center><h1>The Value Window</h1></center>
+
+The value window is an editable <b>Tk</b> <tt>text</tt> window that
+contains the definition of a <a href=Procs.html>proc</a>, the value of
+a <a href=Globals.html>global</a>, or information about a <a
+href=Windows.html>window</a>.<p>
+
+In addition to the standard text bindings, the value window
+understands the following key strokes:
+
+<ul>
+  <li> <tt>Control-x Control-s</tt> sends the value back to the
+       selected interpreter.
+
+  <li> <tt>Control-s</tt> brings up the <b>Find...</b> dialog.
+</ul>
+
+The <b>Value</b> menu item in the main menu bar contains the following
+entries:
+
+<ul>
+  <li> <b>Send Value</b> sends the value back to the selected
+       interpreter.
+  <li> <b>Find...</b> brings up a dialog box that allows searching of
+       the contents of the value window.
+  <li> <b>Save Value...</b> and <b>Load Value...</b> bring up a
+       file selection dialog that allow the value to be saved or
+       loaded from a file.
+  <li> <b>Detach Value</b> creates a new <b>tkinspect</b> window that
+       contains only the main menu, a
+       command/button window, and a value window.  The current value
+       will be copied to the new value window.
+</ul>
+
+<hr>
+<!-- hhmts start -->
+Last modified: Sun Jun  4 22:16:29 1995
+<!-- hhmts end -->
+</body> </html>
