@@ -60,7 +60,7 @@ dialog tkinspect_main {
 	pack $self.menu.file -side left
 	set m [menu $self.menu.file.m]
 	$m add cascade -label "Select Interpreter" -underline 0 \
-	    -menu $self.menu.file.m.interps -command "$self fill_interp_menu"
+	    -menu $self.menu.file.m.interps
 	$m add command -label "New Window" -underline 0 \
 	    -command tkinspect_create_main_window
 	$m add command -label "Update Lists" -underline 0 \
@@ -69,7 +69,8 @@ dialog tkinspect_main {
 	$m add command -label "Close Window" -underline 0 \
 	    -command "$self close"
 	$m add command -label "Exit" -underline 0 -command tkinspect_exit
-	menu $self.menu.file.m.interps -tearoff 0
+	menu $self.menu.file.m.interps -tearoff 0 \
+	    -postcommand "$self fill_interp_menu"
 	menubutton $self.menu.options -menu $self.menu.options.m \
 	    -text "Options" -underline 0
 	pack $self.menu.options -side left
