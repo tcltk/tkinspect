@@ -67,8 +67,7 @@ widget windows_list {
 	if $slot(use_feedback) {
 	    feedback .feedback -title "Getting Windows" \
 		-steps [llength $windows]
-	    grab set .feedback
-	    update idletasks
+	    .feedback grab
 	}
 	foreach w $windows {
 	    $self get_windows $target windows $w
@@ -78,7 +77,6 @@ widget windows_list {
 	    }
 	}
 	if $slot(use_feedback) {
-	    grab release .feedback
 	    destroy .feedback
 	}
 	foreach w $windows {
