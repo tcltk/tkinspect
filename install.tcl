@@ -153,13 +153,14 @@ proc install {} {
     }
     if ![install_files $libdir {
 	about.tcl defaults.tcl lists.tcl globals_list.tcl procs_list.tcl
-	windows_list.tcl value.tcl stl.tcl sls.xbm version.tcl tclIndex
+	windows_list.tcl value.tcl stl.tcl sls.xbm version.tcl
+	help.tcl tclIndex
     }] {
 	return
     }
     if ![install_files $libdir/stl-lite {
 	stl-lite/filechsr.tcl stl-lite/simpleentry.tcl stl-lite/object.tcl
-	stl-lite/tk_util.tcl
+	stl-lite/tk_util.tcl stl-lite/feedback.tcl
     }] {
 	return
     }
