@@ -12,7 +12,16 @@ proc tkinspect_default_options {} {
     option add *Frame.borderWidth 2
     option add *Value*vname*font \
 	-adobe-courier-medium-r-*-*-*-130-*-*-*-*-iso8859-*
-    option add *Value*Text*font \
+    option add *Text*font \
 	-adobe-courier-medium-r-*-*-*-130-*-*-*-*-iso8859-*
-    set tkinspect_default(lists) "procs_list globals_list windows_list"
+    option add *Tkinspect_main*Menubutton.borderWidth 0
+    option add *Procs_list.patterns {
+	^tk[A-Z].*
+	^auto_.*
+    }
+    option add *Globals_list.patterns {
+	^tkPriv.*
+	^auto_.*
+	^tk_.*
+    }
 }
