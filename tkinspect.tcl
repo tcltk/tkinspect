@@ -13,6 +13,7 @@ set tkinspect(list_classes) {
     "windows_list Windows"
     "images_list Images"
     "menus_list Menus"
+    "canvas_list Canvases"
 }
 set tkinspect(help_topics) {
     Intro Value Lists Procs Globals Windows Value Miscellany Notes
@@ -40,7 +41,7 @@ proc tkinspect_widgets_init {} {
     foreach file {
 	lists.tcl procs_list.tcl globals_list.tcl windows_list.tcl
 	images_list.tcl about.tcl value.tcl help.tcl cmdline.tcl
-	windows_info.tcl menus_list.tcl
+	windows_info.tcl menus_list.tcl canvas_list.tcl
     } {
 	uplevel #0 source $tkinspect_library/$file
     }
@@ -197,8 +198,10 @@ dialog tkinspect_main {
 	    }
 	}
     }
-    method add_list {list_class {do_update 0}} {
+    method add_list {list_class} {
 	set list $self.lists.$list_class
+	if [winfo exists $list] return
+	set slot(${list_class}_is_on) 1
 	lappend slot(lists) $list
 	$list_class $list -command "$self select_list_item $list" \
 	    -main $self
@@ -211,6 +214,8 @@ dialog tkinspect_main {
 	# for some reason if all the lists get unpacked the
 	# .lists frame doesn't collapse unless we force it
 	$self.lists config -height 1
+	set list_class [lindex [split $list .] 3]
+	set slot(${list_class}_is_on) 0
     }
     method add_cmdline {} {
 	set cmdline \
