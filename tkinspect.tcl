@@ -47,7 +47,6 @@ dialog tkinspect_main {
     param default_lists "procs_list globals_list windows_list"
     param target ""
     member last_list {}
-    member list_counter -1
     member lists ""
     member cmdline_counter -1
     member cmdlines ""
@@ -68,13 +67,14 @@ dialog tkinspect_main {
 	$m add command -label "New Command Line" -underline 12 \
 	    -command "$self add_cmdline"
 	foreach list_class $tkinspect(list_classes) {
-	    $m add command -label "New $list_class List" \
-		-command "$self add_list $list_class"
+	    $m add checkbutton -label "$list_class List" \
+		-variable [object_slotname ${list_class}_is_on] \
+		-command "$self toggle_list $list_class"
 	}	
 	$m add separator
 	$m add command -label "Close Window" -underline 0 \
 	    -command "$self close"
-	$m add command -label "Exit Tkinspect" -underline 0 \
+	$m add command -label "Exit Tkinspect" -underline 1 \
 	    -command tkinspect_exit
 	menu $self.menu.file.m.interps -tearoff 0 \
 	    -postcommand "$self fill_interp_menu"
@@ -102,6 +102,7 @@ dialog tkinspect_main {
 	pack $self.value -side top -fill both -expand 1
 	foreach list_class $slot(default_lists) {
 	    $self add_list $list_class
+	    set slot(${list_class}_is_on) 1
 	}
 	pack [frame $self.status] -side top -fill x
 	label $self.status.l -bd 2 -relief sunken -anchor w
@@ -168,8 +169,19 @@ dialog tkinspect_main {
 	$self.value set_send_filter ""
 	$self status "Command sent."
     }
-    method add_list {list_class} {
-	set list $self.lists.l[incr slot(list_counter)]
+    method toggle_list {list_class} {
+	set list $self.lists.$list_class
+	if !$slot(${list_class}_is_on) {
+	    $list remove
+	} else {
+	    $self add_list $list_class
+	    if [string length $slot(target)] {
+		$list update $slot(target)
+	    }
+	}
+    }
+    method add_list {list_class {do_update 0}} {
+	set list $self.lists.$list_class
 	lappend slot(lists) $list
 	$list_class $list -command "$self select_list_item $list" \
 	    -main $self
@@ -178,6 +190,10 @@ dialog tkinspect_main {
     method delete_list {list} {
 	set ndx [lsearch -exact $slot(lists) $list]
 	set slot(lists) [lreplace $slot(lists) $ndx $ndx]
+	pack forget $list
+	# for some reason if all the lists get unpacked the
+	# .lists frame doesn't collapse unless we force it
+	$self.lists config -height 1
     }
     method add_cmdline {} {
 	set cmdline \
@@ -205,6 +221,7 @@ dialog tkinspect_main {
 	global tkinspect tkinspect_library
 	if [winfo exists $self.help] {
 	    wm deiconify $self.help
+	    raise $self.help
 	} else {
 	    help_window $self.help -topics $tkinspect(help_topics) \
 		-helpdir $tkinspect_library
