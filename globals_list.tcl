@@ -52,7 +52,8 @@ dialog variable_trace {
 	send $slot(target) \
 	    [list trace vdelete $slot(variable) wu $slot(trace_cmd)]
     }
-    method update_scalar {name op} {
+    method update_scalar {args} {
+	set op [lindex $args end]
 	if {$op == "w"} {
 	    $self.t insert end-1c \
 		[list set $slot(variable) \
