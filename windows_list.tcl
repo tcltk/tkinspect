@@ -76,15 +76,15 @@ widget windows_list {
     method retrieve {target window} {
 	set result [$self retrieve_$slot(mode) $target $window]
 	set old_bg [send $target [list $window cget -background]]
-	send $target [list $window config -background #ff69b4]
+	send $target [list $window configure -background #ff69b4]
 	send $target [list after 200 \
-		      [list catch [list $window config -background $old_bg]]]
+                [list catch [list $window configure -background $old_bg]]]
 	return $result
     }
     method retrieve_config {target window} {
 	set result "# window configuration of [list $window]\n"
 	append result "[list $window] config"
-	foreach spec [send $target [list $window config]] {
+	foreach spec [send $target [list $window configure]] {
 	    if {[llength $spec] == 2} continue
 	    append result " \\\n\t[lindex $spec 0] [list [lindex $spec 4]]"
 	}

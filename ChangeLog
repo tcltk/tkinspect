@@ -1,3 +1,7 @@
+Sat Apr 20 01:27:46 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
+
+	* windows_list.tcl: Fixed bug #546259: erroneous use of 'config'
+
 Thu Apr 04 22:38:44 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 
 	* globals_list.tcl: 
