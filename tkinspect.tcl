@@ -1,4 +1,6 @@
-#!@wish@ -f
+#!/bin/sh
+#\
+exec @wish@ -f "$0" ${1+"$@"}
 #
 # $Id$
 #
@@ -11,19 +13,13 @@ set tkinspect(list_classes) "procs_list globals_list windows_list"
 
 wm withdraw .
 
-if [file exists @stl_library@/tclIndex] {
-    lappend auto_path @stl_library@
-} else {
-    lappend auto_path /usr/local/lib/stl
-    lappend auto_path /vol/pub/stl-0.2/lib/stl
-}
-
 if [file exists @tkinspect_library@/tclIndex] {
     lappend auto_path [set tkinspect_library @tkinspect_library@]
 } else {
     lappend auto_path [set tkinspect_library .]
 }
 
+stl_lite_init
 
 proc tkinspect_exit {} {
     destroy .
@@ -204,7 +200,7 @@ proc tkinspect_failure {reason} {
     error $reason
 }
 proc tkerror {message} {
-    global tkinspect
+    global tkinspect errorInfo
     if [info exists tkinspect(error_is_failure)] {
 	unset tkinspect(error_is_failure)
 	tk_dialog .failure "Tkinspect Failure" $message warning 0 Ok
@@ -213,7 +209,6 @@ proc tkerror {message} {
     }
 }
 
-widgets_init
 tkinspect_widgets_init
 tkinspect_default_options
 if [file exists ~/.tkinspect_opts] {
