@@ -89,7 +89,7 @@ widget value {
 	    wm deiconify $self.search
 	}
     }
-    method search {type direction nowrap text} {
+    method search {type text} {
 	$self.t tag remove search 0.0 end
 	scan [$self.t index end] %d n_lines
 	set start 1
@@ -122,8 +122,6 @@ widget value {
 dialog value_search {
     param value
     member search_type exact
-    member nowrap 0
-    member direction forwards
     method create {} {
 	frame $self.top
 	pack $self.top -side top -fill x
@@ -134,15 +132,12 @@ dialog value_search {
 	pack $self.e -in $self.top -fill x -expand 1
 	checkbutton $self.re -variable [object_slotname search_type] \
 	    -onvalue regexp -offvalue exact -text "Regexp search"
-	checkbutton $self.dir -variable [object_slotname direction] \
-	    -onvalue backwards -offvalue forwards -text "Search backwards"
-	checkbutton $self.wrap -variable [object_slotname nowrap] \
-	    -onvalue 0 -offvalue 1 -text "Wrap search"
-	pack $self.re $self.dir $self.wrap -side top -anchor w
+	pack $self.re -side top -anchor w
+	button $self.go -text "Highlight" -command "$self search"
 	button $self.close -text "Close" -command "destroy $self"
-	pack $self.close -side top
-	wm title $self "Find.."
-	wm iconname $self "Find.."
+	pack $self.go $self.close -side left
+	wm title $self "Find in Value.."
+	wm iconname $self "Find in Value.."
 	focus $self.e
     }
     method reconfig {} {
@@ -150,7 +145,6 @@ dialog value_search {
     method search {} {
 	set text [$self.e get]
 	if ![string length $text] return
-	$slot(value) search $slot(search_type) $slot(direction) \
-	    $slot(nowrap) $text
+	$slot(value) search $slot(search_type) $text
     }
 }
