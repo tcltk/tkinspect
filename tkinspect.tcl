@@ -14,10 +14,24 @@ set tkinspect(list_classes) {
     "images_list Images"
     "menus_list Menus"
     "canvas_list Canvases"
+    "class_list Classes"
+    "object_list Objects"
+}
+set tkinspect(list_class_files) {
+    lists.tcl procs_list.tcl globals_list.tcl windows_list.tcl
+    images_list.tcl about.tcl value.tcl help.tcl cmdline.tcl
+    windows_info.tcl menus_list.tcl canvas_list.tcl classes_list.tcl
+    objects_list.tcl names.tcl
 }
 set tkinspect(help_topics) {
     Intro Value Lists Procs Globals Windows Images Canvases Menus
     Value Miscellany Notes WhatsNew ChangeLog
+}
+
+if {[info commands itcl_info] != ""} {
+	set tkinspect(default_lists) "object_list procs_list globals_list windows_list"
+} else {
+	set tkinspect(default_lists) "procs_list globals_list windows_list"
 }
 
 wm withdraw .
@@ -60,11 +74,9 @@ proc tkinspect_exit {} {
 
 proc tkinspect_widgets_init {} {
     global tkinspect_library
-    foreach file {
-	lists.tcl procs_list.tcl globals_list.tcl windows_list.tcl
-	images_list.tcl about.tcl value.tcl help.tcl cmdline.tcl
-	windows_info.tcl menus_list.tcl canvas_list.tcl names.tcl
-    } {
+    global tkinspect
+
+    foreach file $tkinspect(list_class_files) {
 	uplevel #0 source $tkinspect_library/$file
     }
 }
@@ -76,7 +88,6 @@ proc tkinspect_about {} {
 }
 
 dialog tkinspect_main {
-    param default_lists "procs_list globals_list windows_list"
     param target ""
     member last_list {}
     member lists ""
@@ -141,7 +152,7 @@ dialog tkinspect_main {
 	pack [frame $self.lists -bd 0] -side top -fill both
 	value $self.value -main $self
 	pack $self.value -side top -fill both -expand 1
-	foreach list_class $slot(default_lists) {
+	foreach list_class $tkinspect(default_lists) {
 	    $self add_list $list_class
 	    set slot(${list_class}_is_on) 1
 	}
@@ -360,3 +371,4 @@ dialog connect_interp {
 	$slot(value) set_target $text
     }
 }
+

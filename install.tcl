@@ -173,7 +173,8 @@ proc install {} {
 	about.tcl defaults.tcl windows_info.tcl lists.tcl globals_list.tcl
 	procs_list.tcl windows_list.tcl images_list.tcl menus_list.tcl
 	canvas_list.tcl value.tcl stl.tcl sls.ppm version.tcl help.tcl
-	cmdline.tcl interface.tcl names.tcl tclIndex
+	cmdline.tcl interface.tcl tclIndex
+	names.tcl classes_list.tcl objects_list.tcl
 	Intro.html Lists.html Procs.html Globals.html Windows.html
 	Images.html Canvases.html Menus.html
 	Value.html Miscellany.html Notes.html WhatsNew.html ChangeLog.html
