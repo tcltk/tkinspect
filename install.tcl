@@ -96,7 +96,7 @@ bind .log <FocusIn> {
 frame .buttons
 pack .buttons -side top
 button .install -text "Install" -command install
-button .cancel -text "Cancel" -command "destroy ."
+button .cancel -text "Exit" -command "destroy ."
 pack .install .cancel -in .buttons -side left
 
 wm title . "Tkinspect Installation"
