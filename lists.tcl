@@ -117,7 +117,12 @@ widget windows_list {
 	set slot(mode) $mode
     }
     method retrieve {target window} {
-	$self retrieve_$slot(mode) $target $window
+	set result [$self retrieve_$slot(mode) $target $window]
+	set old_bg [send $target [list $window cget -background]]
+	send $target [list $window config -background #ff69b4]
+	send $target [list after 200 \
+		      [list catch [list $window config -background $old_bg]]]
+	return $result
     }
     method retrieve_config {target window} {
 	set result "# window configuration of $window\n"
@@ -127,25 +132,31 @@ widget windows_list {
 	    append result " \\\n\t[lindex $spec 0] [list [lindex $spec 4]]"
 	}
 	append result "\n"
-	set old_bg [send $target [list $window cget -background]]
-	send $target [list $window config -background #ff69b4]
-	send $target [list after 200 \
-		      [list catch [list $window config -background $old_bg]]]
 	return $result
+    }
+    method format_packing_info {result_var window info} {
+	upvar $result_var result
+	append result "pack configure $window"
+	set len [llength $info]
+	for {set i 0} {$i < $len} {incr i 2} {
+	    append result " \\\n\t[lindex $info $i] [lindex $info [expr $i+1]]"
+	}
+	append result "\n"
     }
     method retrieve_packing {target window} {
 	set result "# packing info for $window\n"
 	if [catch {send $target pack info $window} info] {
 	    append result "# $info\n"
 	} else {
-	    append result "pack $window $info\n"
+	    $self format_packing_info result $window $info
 	}
 	return $result
     }
     method retrieve_slavepacking {target window} {
 	set result "# packing info for slaves of $window\n"
 	foreach slave [send $target pack slaves $window] {
-	    append result "pack $window [send $target pack info $slave]\n"
+	    $self format_packing_info result $slave \
+		[send $target pack info $slave]
 	}
 	return $result
     }
@@ -175,6 +186,10 @@ widget windows_list {
 	}
 	if [$slot(main) cget -filter_window_class_config] {
 	    regsub -all "(\n)\[ \t\]*-class\[ \t\]+\[^ \\\n\]*\n?" $value \
+		"\\1" value
+	}
+	if [$slot(main) cget -filter_window_pack_in] {
+	    regsub -all "(\n)\[ \t\]*-in\[ \t\]+\[^ \\\n\]*\n?" $value \
 		"\\1" value
 	}
 	return $value
