@@ -5,9 +5,11 @@
 widget windows_list {
     object_include tkinspect_list
     param title "Windows"
-    member filter_empty_window_configs 1
-    member filter_window_class_config 1
-    member filter_window_pack_in 1
+    param get_window_info 1
+    param filter_empty_window_configs 1
+    param filter_window_class_config 1
+    param filter_window_pack_in 1
+    param use_feedback 1
     member mode config
     method get_item_name {} { return window }
     method create {} {
@@ -35,6 +37,9 @@ widget windows_list {
 	    -value classbindings -label "Window Class Bindings" -underline 8 \
             -command "$self mode_changed"
         $slot(menu) add separator
+	$slot(menu) add checkbutton \
+	    -variable [object_slotname get_window_info] \
+            -label "Get Window Information" -underline 0
         $slot(menu) add checkbutton \
 	    -variable [object_slotname filter_empty_window_configs] \
             -label "Filter Empty Window Options"
@@ -44,6 +49,9 @@ widget windows_list {
         $slot(menu) add checkbutton \
 	    -variable [object_slotname filter_window_pack_in] \
             -label "Filter Pack -in Options"
+	$slot(menu) add checkbutton \
+	    -variable [object_slotname use_feedback] \
+	    -label "Use Feedback When Getting Windows"
     }
     method get_windows {target result_var parent} {
 	upvar $result_var result
@@ -53,9 +61,26 @@ widget windows_list {
 	}
     }
     method update {target} {
+	if !$slot(get_window_info) return
 	$self clear
-	set windows .
-	$self get_windows $target windows .
+	set windows [send $target winfo children .]
+	if $slot(use_feedback) {
+	    feedback .feedback -title "Getting Windows" \
+		-steps [llength $windows]
+	    grab set .feedback
+	    update idletasks
+	}
+	foreach w $windows {
+	    $self get_windows $target windows $w
+	    if $slot(use_feedback) {
+		.feedback step
+		update idletasks
+	    }
+	}
+	if $slot(use_feedback) {
+	    grab release .feedback
+	    destroy .feedback
+	}
 	foreach w $windows {
 	    $self append $w
 	}
