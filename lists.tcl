@@ -10,6 +10,7 @@ dialog filter_editor {
         frame $self.top
         label $self.l -text "Pattern:"
         entry $self.e -width 40 -relief sunken
+	bind $self.e <Return> "$self add_pattern"
         pack $self.l -in $self.top -side left
         pack $self.e -in $self.top -side left -fill x
         pack $self.top -side top -fill x -pady .25c
@@ -38,7 +39,6 @@ dialog filter_editor {
         pack $self.lframe -in $self -side right -fill both -expand yes
 	set title "Edit [$slot(list) cget -title] Filter"
 	wm title $self $title
-	wm iconname $self $title
 	foreach pat [$slot(list) cget -patterns] {
 	    $self.list insert end $pat
 	    lappend slot(patterns) $pat
@@ -88,7 +88,6 @@ dialog list_search {
 	pack $self.go $self.reset $self.close -side left
 	set title "Find in [$slot(list) get_item_name] List..."
 	wm title $self $title
-	wm iconname $self $title
 	focus $self.e
 	$slot(list) reset_search
     }
@@ -101,6 +100,31 @@ dialog list_search {
 	set text [$self.e get]
 	if ![string length $text] return
 	$slot(list) search $slot(search_type) $text
+    }
+}
+
+dialog list_show {
+    param list
+    method create {} {
+	frame $self.top
+	pack $self.top -side top -fill x
+	label $self.l -text "Show:"
+	entry $self.e -bd 2 -relief sunken
+	bind $self.e <Return> "$self show"
+	pack $self.l -in $self.top -side left
+	pack $self.e -in $self.top -fill x -expand 1
+	button $self.show -text "Show" -command "$self show"
+	button $self.close -text "Close" -command "destroy $self"
+	pack $self.show $self.close -side left
+	wm title $self "Show a [$slot(list) get_item_name]"
+	focus $self.e
+    }
+    method reconfig {} {
+    }
+    method show {} {
+	set item [$self.e get]
+	$slot(list) run_command $item
+	wm withdraw $self
     }
 }
 
@@ -126,11 +150,14 @@ widget tkinspect_list {
 	pack $self.sb -side right -fill y
 	pack $self.list -side right -fill both -expand yes
 	set slot(menu) [$slot(main) add_menu $slot(title)]
-	$slot(menu) add command -label "Find..." \
+	$slot(menu) add command \
+	    -label "Show a [$self get_item_name]..." -underline 0 \
+	    -command "$self show_dialog"
+	$slot(menu) add command -label "Find $slot(title)..." -underline 0 \
 	    -command "$self search_dialog"
-	$slot(menu) add command -label "Edit Filter..." \
+	$slot(menu) add command -label "Edit Filter..." -underline 0 \
 	    -command "$self edit_filter"
-	$slot(menu) add command -label "Remove List" \
+	$slot(menu) add command -label "Remove List" -underline 0 \
 	    -command "$self remove"
     }
     method reconfig {} {
@@ -230,6 +257,14 @@ widget tkinspect_list {
 	if !$found {
 	    $slot(main) status "Didn't find \"$text\""
 	    $self reset_search
+	}
+    }
+    method show_dialog {} {
+	if ![winfo exists $self.show] {
+	    list_show $self.show -list $self
+	    center_window $self.show
+	} else {
+	    wm deiconify $self.show
 	}
     }
 }
