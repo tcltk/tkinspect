@@ -46,7 +46,6 @@ proc tkinspect_about {} {
 dialog tkinspect_main {
     param default_lists "procs_list globals_list windows_list"
     param target ""
-    member get_window_info 1
     member last_list {}
     member list_counter -1
     member lists ""
@@ -61,29 +60,24 @@ dialog tkinspect_main {
 	set m [menu $self.menu.file.m]
 	$m add cascade -label "Select Interpreter" -underline 0 \
 	    -menu $self.menu.file.m.interps
-	$m add command -label "New Window" -underline 0 \
-	    -command tkinspect_create_main_window
-	$m add command -label "New Command Line" -underline 12 \
-	    -command "$self add_cmdline"
 	$m add command -label "Update Lists" -underline 0 \
 	    -command "$self update_lists"
 	$m add separator
-	$m add command -label "Close Window" -underline 0 \
-	    -command "$self close"
-	$m add command -label "Exit" -underline 0 -command tkinspect_exit
-	menu $self.menu.file.m.interps -tearoff 0 \
-	    -postcommand "$self fill_interp_menu"
-	menubutton $self.menu.options -menu $self.menu.options.m \
-	    -text "Options" -underline 0
-	pack $self.menu.options -side left
-	set m [menu $self.menu.options.m]
+	$m add command -label "New Tkinspect Window" -underline 0 \
+	    -command tkinspect_create_main_window
+	$m add command -label "New Command Line" -underline 12 \
+	    -command "$self add_cmdline"
 	foreach list_class $tkinspect(list_classes) {
 	    $m add command -label "New $list_class List" \
 		-command "$self add_list $list_class"
-	}
+	}	
 	$m add separator
-	$m add checkbutton -variable [object_slotname get_window_info] \
-            -label "Get Window Information" -underline 0
+	$m add command -label "Close Window" -underline 0 \
+	    -command "$self close"
+	$m add command -label "Exit Tkinspect" -underline 0 \
+	    -command tkinspect_exit
+	menu $self.menu.file.m.interps -tearoff 0 \
+	    -postcommand "$self fill_interp_menu"
 	menubutton $self.menu.help -menu $self.menu.help.m -text "Help" \
 	    -underline 0
 	pack $self.menu.help -side right
