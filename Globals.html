@@ -1,0 +1,45 @@
+<html> <head>
+<title>Globals List</title>
+<!-- $Id$ -->
+</head>
+
+<body>
+<center><h1>Globals List</h1></center>
+
+The <b>Globals List</b> contains a list of the global variables of the
+target application.<p>
+
+This list has one list-specific operation: <b>Trace Variable</b>
+creates a new toplevel window that will contain set statements
+reflecting writes to the variable.  (The trace will contain the last
+50 set's by default, the number can be set through the
+<tt>*Variable_trace.savelines</tt> option.)
+<b>Trace Variable</b> handles both
+scalars and arrays.<p>
+
+For an interesting example of how this works, try the following:
+
+<ul>
+  <li> Select an application (for example, <b>tkinspect</b> itself.)
+  <li> Choose <b>Show Global...</b> from the <b>Globals</b> menu, and
+       enter <tt>tkPriv</tt>.
+  <li> Choose <b>Trace Variable</b> from the <b>Globals</b> menu.
+</ul>
+
+You will now be tracking the <tt>tkPriv</tt> array.<p>
+
+The default list of patterns for the list filter is:
+
+<pre>
+    ^tkPriv.*
+    ^auto_.*
+    ^tk_.*
+</pre>
+
+And is read from the option <tt>*Globals_list.patterns</tt>.
+
+<hr>
+<!-- hhmts start -->
+Last modified: Sun Jun  4 22:23:01 1995
+<!-- hhmts end -->
+</body> </html>
