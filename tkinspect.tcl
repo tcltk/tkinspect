@@ -405,7 +405,7 @@ dialog tkinspect_main {
 	set w $self.menu.[string tolower $name]
 	menubutton $w -menu $w.m -text $name -underline 0 -bd 1 -relief flat
         bind $w <Enter> {%W configure -relief raised -bd 1}
-        bind $w <Leave> {%W configure -relief flat -bd 0}
+        bind $w <Leave> {%W configure -relief flat -bd 1}
 	pack $w -side left
 	menu $w.m
 	return $w.m

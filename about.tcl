@@ -23,7 +23,8 @@ dialog about {
 	frame $self.mug -bd 4
 	label $self.mug.l -justify left \
             -text "Originally by Sam Shen\n\Contributions\
-            from:\nPaul Healy\nJohn LoVerso\n\T. Schotanus\nPat Thoyts\n"
+            from:\nPaul Healy\nJohn LoVerso\n\T. Schotanus\
+            \nPat Thoyts\nAlexander Caldwell\n"
 
 	global about_priv
 	if ![info exists about_priv(mug_image)] {
