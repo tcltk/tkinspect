@@ -12,9 +12,20 @@ dialog variable_trace {
     param width 50
     param height 5
     param savelines 50
+    param main
     member is_array 0
     member trace_cmd ""
     method create {} {
+	pack [frame $self.menu -bd 2 -relief raised] -side top -fill x
+	menubutton $self.menu.file -text "File" -underline 0 \
+	    -menu $self.menu.file.m
+	pack $self.menu.file -side left
+	set m [menu $self.menu.file.m]
+	$m add command -label "Save Trace..." -command "$self save" \
+	    -underline 0
+	$m add separator
+	$m add command -label "Close Window" -command "destroy $self" \
+	    -underline 0
 	scrollbar $self.sb -relief sunken -bd 1 -command "$self.t yview"
 	text $self.t -yscroll "$self.sb set" -setgrid 1
 	pack $self.sb -side right -fill y
@@ -80,12 +91,21 @@ dialog variable_trace {
 	}
 	$self.t see end
     }
+    method save {} {
+	filechooser $self.save -title "Save $slot(variable) Trace" -newfile 1
+	set file [$self.save run]
+	if {![string length $file]} return
+	set fp [open $file w]
+	puts $fp [$self.t get 1.0 end]
+	close $fp
+	$slot(main) status "Trace saved to \"$file\"."
+    }
 }
 
-proc create_variable_trace {target var} {
+proc create_variable_trace {main target var} {
     global variable_trace_priv
     variable_trace .vt[incr variable_trace_priv(counter)] -target $target \
-	-variable $var
+	-variable $var -main $main
 }
 
 widget globals_list {
@@ -95,7 +115,7 @@ widget globals_list {
     method create {} {
 	tkinspect_list:create $self
 	$slot(menu) add separator
-	$slot(menu) add command -label "Trace Variable" \
+	$slot(menu) add command -label "Trace Variable" -underline 0 \
 	    -command "$self trace_variable"
     }
     method update {target} {
@@ -125,6 +145,6 @@ widget globals_list {
 	    tkinspect_failure \
 	     "No global variable has been selected.  Please select one first."
 	}
-	create_variable_trace $target $slot(current_item)
+	create_variable_trace $slot(main) $target $slot(current_item)
     }
 }
