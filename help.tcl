@@ -41,8 +41,12 @@ dialog help_window {
 	bind $self <Alt-Right> "$self forward"
 	bind $self <Alt-Left> "$self back"
 	bind $self <Key-space> "$self page_forward"
+	bind $self <Key-Next> "$self page_forward"
 	bind $self <Key-BackSpace> "$self page_back"
+	bind $self <Key-Prior> "$self page_back"
 	bind $self <Key-Delete> "$self page_back"
+	bind $self <Key-Down> "$self line_forward"
+	bind $self <Key-Up> "$self line_back"
     }
     method reconfig {} {
 	set m $self.menu.topics.m
@@ -128,4 +132,6 @@ dialog help_window {
     method page_back {} {
 	$self.text.t yview scroll -1 pages
     }
+    method line_forward {} { $self.text.t yview scroll 1 units }
+    method line_back {} { $self.text.t yview scroll -1 units }
 }
