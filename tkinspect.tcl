@@ -39,14 +39,30 @@ if {[info commands itcl_info] != ""} {
 
 wm withdraw .
 
-if [file exists @tkinspect_library@/tclIndex] {
+# Find the tkinspect library - support scripted documents (Steve Landers)
+if {[info exists ::scripdoc::self]} {
+    lappend auto_path [file join $::scripdoc::self lib]
+    set tkinspect_library [file join $::scripdoc::self lib tkinspect]
+    lappend auto_path $tkinspect_library
+} elseif [file exists @tkinspect_library@/tclIndex] {
     lappend auto_path [set tkinspect_library @tkinspect_library@]
 } else {
-    lappend auto_path [set tkinspect_library .]
+    lappend auto_path [set tkinspect_library [file dirname [info script]]]
+}
+
+# Use the winsend package if available.
+if {[info command send] == {}} {
+    if {![catch {package require winsend}]} {
+        set tkinspect(title) [winsend appname]
+
+        proc send {app args} {
+            eval winsend send [list $app] $args
+        }
+    }
 }
 
 # Emulate the 'send' command using the dde package if available.
-if {[info command send] == {}} {
+if {[info command send] == {} || [package provide winsend] != {}} {
     if {![catch {package require dde}]} {
         array set dde [list count 0 topic $tkinspect(title)]
         while {[dde services TclEval $dde(topic)] != {}} {
@@ -56,8 +72,18 @@ if {[info command send] == {}} {
         dde servername $dde(topic)
         set tkinspect(title) $dde(topic)
         unset dde
-        proc send {app args} {
-            eval dde eval [list $app] $args
+        if {[package provide winsend] != {}} {
+            proc send {app args} {
+                if {[string match {!*} $app]} {
+                    eval dde eval [list [string range $app 1 end]] $args
+                } else {
+                    eval winsend send [list $app] $args
+                }
+            }
+        } else {
+            proc send {app args} {
+                eval dde eval [list $app] $args
+            }
         }
     }
 }
@@ -238,10 +264,25 @@ dialog tkinspect_main {
     method fill_interp_menu {} {
 	set m $self.menu.file.m.interps
 	catch {$m delete 0 last}
+        set winsend 0
+        if {[package provide winsend] != {}} {
+            set winsend 1
+            foreach interp [winsend interps] {
+                $m add command -label $interp \
+                    -command [list $self set_target $interp]
+            }
+        }
         if {[package provide dde] != {}} {
             foreach service [dde services TclEval {}] {
-                $m add command -label [lindex $service 1] \
-                    -command [list $self set_target [lindex $service 1]]
+                if {$winsend} {
+                    set label "[lindex $service 1] (dde)"
+                    set app   "![lindex $service 1]"
+                } else {
+                    set label [lindex $service 1]
+                    set app $label
+                }
+                $m add command -label $label \
+                    -command [list $self set_target $app]
             }
         } else {
             foreach interp [winfo interps] {

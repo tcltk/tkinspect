@@ -65,7 +65,7 @@ namespace eval names {
 
     proc value {target var} {
         set tail [namespace tail $var]
-        if [send $target [list array size $var]] {
+        if {[send $target [list array exists $var]]} {
             return "variable $tail ; # $var is an array\n" ; # dump it out?
         }
         set cmd [list set $var]

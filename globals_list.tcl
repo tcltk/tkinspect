@@ -30,7 +30,7 @@ dialog variable_trace {
 	text $self.t -yscroll "$self.sb set" -setgrid 1
 	pack $self.sb -side right -fill y
 	pack $self.t -side right -fill both -expand 1
-	if {[send $slot(target) array size $slot(variable)] == 0} {
+	if {![send $slot(target) array exists $slot(variable)]} {
 	    set slot(trace_cmd) "send [winfo name .] $self update_scalar"
 	    $self update_scalar "" "" w
 	    set slot(is_array) 0

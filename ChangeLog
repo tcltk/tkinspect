@@ -1,3 +1,10 @@
+Thu Apr 04 22:38:44 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
+
+	* globals_list.tcl: 
+	* names.tcl: fix array checking (use array exists).
+	* tkinspect.tcl: merged in support for scripted documents (patch
+	by Steve Landers). Use the winsend package if available.
+	
 Mon Mar 25 12:05:22 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 
 	* Bug #533899: Found and merged Paul Healy's 1997 p4 patch which adds
