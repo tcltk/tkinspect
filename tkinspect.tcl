@@ -5,8 +5,8 @@
 
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
-set tkinspect(release) 5.0.1
-set tkinspect(release_date) "Feb 7, 1995"
+set tkinspect(release) 5.0.2
+set tkinspect(release_date) "Feb 10, 1995"
 set tkinspect(list_classes) "procs_list globals_list windows_list"
 
 wm withdraw .
@@ -169,7 +169,11 @@ dialog tkinspect_main {
 	lappend slot(lists) $list
 	$list_class $list -command "$self select_list_item $list" \
 	    -main $self
-	pack $list -side left -fill y -expand 1
+	pack $list -side left -fill both -expand 1
+    }
+    method delete_list {list} {
+	set ndx [lsearch -exact $slot(lists) $list]
+	set slot(lists) [lreplace $slot(lists) $ndx $ndx]
     }
     method add_menu {name} {
 	set w $self.menu.[string tolower $name]
@@ -178,7 +182,7 @@ dialog tkinspect_main {
 	menu $w.m
 	return $w.m
     }
-    method destroy_menu {name} {
+    method delete_menu {name} {
 	set w $self.menu.[string tolower $name]
 	pack forget $w
 	destroy $w
