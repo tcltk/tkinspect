@@ -15,19 +15,19 @@ widget windows_list {
 	$slot(menu) add separator
 	$slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value config -label "Window Configuration" -underline 7 \
-            -command "$self change_mode"
+            -command "$self mode_changed"
         $slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value packing -label "Window Packing" -underline 7 \
-            -command "$self change_mode"
+            -command "$self mode_changed"
         $slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value slavepacking -label "Slave Window Packing" -underline 1 \
-            -command "$self change_mode"
+            -command "$self mode_changed"
         $slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value bindings -label "Window Bindings" -underline 7 \
-            -command "$self change_mode"
+            -command "$self mode_changed"
         $slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value classbindings -label "Window Class Bindings" -underline 8 \
-            -command "$self change_mode"
+            -command "$self mode_changed"
         $slot(menu) add separator
         $slot(menu) add checkbutton \
 	    -variable [object_slotname filter_empty_window_configs] \
@@ -56,19 +56,33 @@ widget windows_list {
     }
     method set_mode {mode} {
 	set slot(mode) $mode
-	$self change_mode
+	$self mode_changed
     }
-    method change_mode {} {
+    method clear {} {
+	tkinspect_list:clear $self
+	if {$slot(mode) == "classbindings"} {
+	    $self.list insert 0 "all"
+	}
+    }
+    method mode_changed {} {
 	if {[$slot(main) last_list] == $self} {
 	    $slot(main) select_list_item $self $slot(current_item)
+	}
+	if {[$self.list get 0] == "all"} {
+	    $self.list delete 0
+	}
+	if {$slot(mode) == "classbindings"} {
+	    $self.list insert 0 "all"
 	}
     }
     method retrieve {target window} {
 	set result [$self retrieve_$slot(mode) $target $window]
-	set old_bg [send $target [list $window cget -background]]
-	send $target [list $window config -background #ff69b4]
-	send $target [list after 200 \
-		      [list catch [list $window config -background $old_bg]]]
+	if {$window != "all"} {
+	    set old_bg [send $target [list $window cget -background]]
+	    send $target [list $window config -background #ff69b4]
+	    send $target [list after 200 \
+		       [list catch [list $window config -background $old_bg]]]
+	}
 	return $result
     }
     method retrieve_config {target window} {
@@ -117,7 +131,11 @@ widget windows_list {
 	return $result
     }
     method retrieve_classbindings {target window} {
-	set class [send $target winfo class $window]
+	if {$window == "all"} {
+	    set class "all"
+	} else {
+	    set class [send $target winfo class $window]
+	}
 	set result "# class bindings for $window\n# class: $class"
 	foreach sequence [send $target bind $class] {
 	    append result "\nbind $class $sequence "
