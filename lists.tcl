@@ -148,6 +148,7 @@ widget tkinspect_list {
 	listbox $self.list -relief sunken -exportselection 0 \
 	    -yscroll "$self.sb set" -selectmode single
 	bind $self.list <1> "$self click %x %y; continue"
+	bind $self.list <Key-space> "$self trigger; continue"
 	pack $self.sb -side right -fill y
 	pack $self.list -side right -fill both -expand yes
 	set slot(menu) [$slot(main) add_menu $slot(title)]
@@ -201,6 +202,11 @@ widget tkinspect_list {
     }
     method click {x y} {
 	$self run_command [$self.list get @$x,$y]
+    }
+    method trigger {} {
+	set selection [$self.list curselection]
+	if ![llength $selection] return
+	$self run_command [$self.list get [lindex $selection 0]]
     }
     method run_command {item} {
 	if [string length $slot(command)] {
