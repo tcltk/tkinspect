@@ -91,7 +91,7 @@ namespace eval names {
         puts ""
         puts "vars: [vars $appname]"
         puts ""
-        puts "exports: [exports $appname"
+        puts "exports: [exports $appname]"
     }
 }
 
