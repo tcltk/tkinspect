@@ -32,6 +32,7 @@ widget value {
 	bind $self.t <Control-x><Control-s> "$self send_value"
 	bind $self.t <Control-s> "$self search_dialog"
 	set m [$slot(main) add_menu Value]
+	bind $self.t <3> "tk_popup $m %X %Y"
 	$m add command -label "Send Value" -command "$self send_value" \
 	    -underline 1
 	$m add command -label "Find..." -command "$self search_dialog" \

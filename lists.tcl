@@ -152,6 +152,7 @@ widget tkinspect_list {
 	pack $self.sb -side right -fill y
 	pack $self.list -side right -fill both -expand yes
 	set slot(menu) [$slot(main) add_menu $slot(title)]
+	bind $self.list <3> "tk_popup $slot(menu) %X %Y"
 	$slot(menu) add command \
 	    -label "Show a [$self get_item_name]..." -underline 0 \
 	    -command "$self show_dialog"
