@@ -82,8 +82,8 @@ widget windows_list {
 	return $result
     }
     method retrieve_config {target window} {
-	set result "# window configuration of $window\n"
-	append result "$window config"
+	set result "# window configuration of [list $window]\n"
+	append result "[list $window] config"
 	foreach spec [send $target [list $window config]] {
 	    if {[llength $spec] == 2} continue
 	    append result " \\\n\t[lindex $spec 0] [list [lindex $spec 4]]"
@@ -93,7 +93,7 @@ widget windows_list {
     }
     method format_packing_info {result_var window info} {
 	upvar $result_var result
-	append result "pack configure $window"
+	append result "pack configure [list $window]"
 	set len [llength $info]
 	for {set i 0} {$i < $len} {incr i 2} {
 	    append result " \\\n\t[lindex $info $i] [lindex $info [expr $i+1]]"
@@ -101,8 +101,8 @@ widget windows_list {
 	append result "\n"
     }
     method retrieve_packing {target window} {
-	set result "# packing info for $window\n"
-	if [catch {send $target pack info $window} info] {
+	set result "# packing info for [list $window]\n"
+	if [catch {send $target [list pack info $window]} info] {
 	    append result "# $info\n"
 	} else {
 	    $self format_packing_info result $window $info
@@ -110,49 +110,49 @@ widget windows_list {
 	return $result
     }
     method retrieve_slavepacking {target window} {
-	set result "# packing info for slaves of $window\n"
-	foreach slave [send $target pack slaves $window] {
+	set result "# packing info for slaves of [list $window]\n"
+	foreach slave [send $target [list pack slaves $window]] {
 	    $self format_packing_info result $slave \
-		[send $target pack info $slave]
+		[send $target [list pack info $slave]]
 	}
 	return $result
     }
     method retrieve_bindtags {target window} {
-	set result "# bindtags of $window\n"
+	set result "# bindtags of [list $window]\n"
 	set tags [send $target [list bindtags $window]]
 	append result [list bindtags $window $tags]
 	append result "\n"
 	return $result
     }
     method retrieve_bindtagsplus {target window} {
-	set result "# bindtags of $window\n"
+	set result "# bindtags of [list $window]\n"
 	set tags [send $target [list bindtags $window]]
 	append result [list bindtags $window $tags]
 	append result "\n# bindings (in bindtag order)..."
 	foreach tag $tags {
-	    foreach sequence [send $target bind $tag] {
+	    foreach sequence [send $target [list bind $tag]] {
 		append result "\nbind $tag $sequence "
-		lappend result [send $target bind $tag $sequence]
+		lappend result [send $target [list bind $tag $sequence]]
 	    }
 	}
 	append result "\n"
 	return $result
     }
     method retrieve_bindings {target window} {
-	set result "# bindings of $window"
-	foreach sequence [send $target bind $window] {
+	set result "# bindings of [list $window]"
+	foreach sequence [send $target [list bind $window]] {
 	    append result "\nbind $window $sequence "
-	    lappend result [send $target bind $window $sequence]
+	    lappend result [send $target [list bind $window $sequence]]
 	}
 	append result "\n"
 	return $result
     }
     method retrieve_classbindings {target window} {
-	set class [send $target winfo class $window]
+	set class [$slot(main) windows_info get_class $target $window]
 	set result "# class bindings for $window\n# class: $class"
-	foreach sequence [send $target bind $class] {
+	foreach sequence [send $target [list bind $class]] {
 	    append result "\nbind $class $sequence "
-	    lappend result [send $target bind $class $sequence]
+	    lappend result [send $target [list bind $class $sequence]]
 	}
 	append result "\n"
 	return $result

@@ -18,7 +18,7 @@ object_class windows_info {
     method get_windows {} { return $slot(windows) }
     method append_windows {target result_var parent} {
 	upvar $result_var result
-	foreach w [send $target winfo children $parent] {
+	foreach w [send $target [list winfo children $parent]] {
 	    lappend slot(windows) $w
 	    $self append_windows $target result $w
 	}
@@ -38,7 +38,7 @@ object_class windows_info {
     }
     method get_class {target w} {
 	if ![info exists slot($w.class)] {
-	    if ![send $target winfo exists $w] {
+	    if ![send $target [list winfo exists $w]] {
 		# the window no longer exists, so delete it from our list
 		set ndx [lsearch -exact $slot(windows) $w]
 		if {$ndx >= 0} {
