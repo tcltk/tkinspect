@@ -222,7 +222,7 @@ widget tkinspect_list {
 	if [string length $slot(command)] {
 	    set slot(current_item) $item
 	    if [string length $slot(current_item)] {
-		uplevel #0 [concat $slot(command) $slot(current_item)]
+		uplevel #0 [concat $slot(command) [list $slot(current_item)]]
 	    }
 	}	
     }
