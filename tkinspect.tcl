@@ -7,7 +7,7 @@ exec @wish@ -f "$0" ${1+"$@"}
 
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
-set tkinspect(release) 5.0.2
+set tkinspect(release) 5.0.3
 set tkinspect(release_date) "Feb 10, 1995"
 set tkinspect(list_classes) "procs_list globals_list windows_list"
 
@@ -88,7 +88,7 @@ dialog tkinspect_main {
 	bind $f.command <Return> "$self send_command \[%W get\]"
 	pack $f.command -side left -fill x -expand 1
 	button $f.send_command -text "Send Command" \
-	    -command "$self send_command"
+	    -command "$self send_command \[$f.command get\]"
 	button $f.send_value -text "Send Value" \
 	    -command "$self.value send_value"
 	pack $f.send_command $f.send_value -side left
