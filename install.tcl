@@ -1,4 +1,6 @@
-#!/usr/local/bin/wish4.0
+#!/bin/sh
+# \
+exec wish "$0" "$*"
 #
 # $Id$
 #
@@ -78,7 +80,7 @@ pack .title .title2 -side top
 text .instructions -relief ridge -bd 4 -width 20 -height 4 -wrap word \
     -takefocus 0
 .instructions insert 1.0 \
-{Fill out the pathnames below and press the install button.  Any errors will appear in log window below.  If you wish to demo tkinspect w/o installing it, try "wish4.0 -f tkinspect.tcl".
+{Fill out the pathnames below and press the install button.  Any errors will appear in log window below.  If you wish to demo tkinspect w/o installing it, try "wish -f tkinspect.tcl".
 }
 pack .instructions -side top -fill both -expand 1
 set prefix /usr/local
@@ -110,7 +112,7 @@ proc log {msg} {
     update
 }
 
-foreach name {wish4.0 wish} {
+foreach name {wish8.4 wish8.3 wish8.0 wish4.0 wish} {
     log "Searching for $name..."
     foreach dir [split $env(PATH) :] {
 	if [file executable $dir/$name] {
@@ -127,7 +129,7 @@ foreach name {wish4.0 wish} {
 if [info exists wish] {
     log "using $wish\n"    
 } else {
-    set wish /usr/local/bin/wish4.0
+    set wish /usr/local/bin/wish8.3
     log "Hmm, using $wish anways...\n"
 }
 
@@ -171,7 +173,7 @@ proc install {} {
 	about.tcl defaults.tcl windows_info.tcl lists.tcl globals_list.tcl
 	procs_list.tcl windows_list.tcl images_list.tcl menus_list.tcl
 	canvas_list.tcl value.tcl stl.tcl sls.ppm version.tcl help.tcl
-	cmdline.tcl interface.tcl tclIndex
+	cmdline.tcl interface.tcl names.tcl tclIndex
 	Intro.html Lists.html Procs.html Globals.html Windows.html
 	Images.html Canvases.html Menus.html
 	Value.html Miscellany.html Notes.html WhatsNew.html ChangeLog.html

@@ -41,7 +41,7 @@ proc tkinspect_widgets_init {} {
     foreach file {
 	lists.tcl procs_list.tcl globals_list.tcl windows_list.tcl
 	images_list.tcl about.tcl value.tcl help.tcl cmdline.tcl
-	windows_info.tcl menus_list.tcl canvas_list.tcl
+	windows_info.tcl menus_list.tcl canvas_list.tcl names.tcl
     } {
 	uplevel #0 source $tkinspect_library/$file
     }
@@ -263,21 +263,14 @@ proc tkinspect_create_main_window {args} {
     return $w
 }
 
-auto_load tkerror
-rename tkerror tk_tkerror
+# 971005: phealy
+#
+# With tk8.0 the default tkerror proc is finally gone - bgerror
+# takes its place (see the changes tk8.0 changes file). This
+# simplified error handling should be ok. 
+#
 proc tkinspect_failure {reason} {
-    global tkinspect
-    set tkinspect(error_is_failure) 1
-    error $reason
-}
-proc tkerror {message} {
-    global tkinspect errorInfo
-    if [info exists tkinspect(error_is_failure)] {
-	unset tkinspect(error_is_failure)
-	tk_dialog .failure "Tkinspect Failure" $message warning 0 Ok
-    } else {
-	uplevel [list tk_tkerror $message]
-    }
+    tk_dialog .failure "Tkinspect Failure" $reason warning 0 Ok
 }
 
 tkinspect_widgets_init

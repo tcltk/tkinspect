@@ -1,3 +1,17 @@
+Sun Dec 14 19:46:05 1997  Paul Healy <ei9gl@indigo.ie>
+	
+	* tkinspect: describe patch procedure to get around diff/patch/RCS
+	interaction. Released p3.
+	
+Sun Nov 23 22:14:36 1997  Paul Healy <ei9gl@indigo.ie>
+	
+	* tkinspect: handle procedures and variables inside namespaces
+	
+Sun Oct 05 20:09:10 1997  Paul Healy <ei9gl@indigo.ie>
+
+	* tkinspect: handle the disappearance of the tkerror proc in tk8.0
+	Released p2.
+
 Fri Jun 23 00:20:15 1995  Sam Shen  <sls@aconcagua.lbl.gov>
 
 	* version.tcl: Bump to 5.1.6.

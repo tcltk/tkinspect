@@ -121,7 +121,7 @@ widget globals_list {
     }
     method update {target} {
 	$self clear
-	foreach var [lsort [send $target info globals]] {
+	foreach var [lsort [names::vars $target]] {
 	    $self append $var
 	}
     }

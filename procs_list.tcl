@@ -8,7 +8,7 @@ widget procs_list {
     method get_item_name {} { return proc }
     method update {target} {
 	$self clear
-	foreach proc [lsort [send $target info procs]] {
+	foreach proc [lsort [names::procs $target]] {
 	    $self append $proc
 	}
     }
