@@ -6,8 +6,8 @@
 
 proc version_init {} {
     global tkinspect tk_version tk_patchLevel
-    set tkinspect(release) 5.1.6p6
-    set tkinspect(release_date) "14 Mar 2002"
+    set tkinspect(release) 5.1.6p7
+    set tkinspect(release_date) "22 Mar 2002"
     scan $tk_version "%d.%d" major minor
     if {$major < 8} {
 	puts stderr \
