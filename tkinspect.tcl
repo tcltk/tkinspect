@@ -234,7 +234,7 @@ dialog tkinspect_main {
         if {$type == "comm"} {
             set slot(target,self) [comm::comm self]
         } else {
-            set slot(target,self) [winfo name .]
+            set slot(target,self) $tkinspect(title)
         }
 	$self update_lists
 	foreach cmdline $slot(cmdlines) {
