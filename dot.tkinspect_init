@@ -1,0 +1,11 @@
+#
+# this is an example .tkinspect_init, it's what I use when I debug tkinspect
+# itself.
+#
+tkinspect_set_target tkinspect.tcl
+tkinspect_show_list images
+tkinspect_show_list canvas
+tkinspect_select global tkPriv
+tkinspect_help WhatsNew
+tkinspect_create_cmdline
+tkinspect_trace_global tkPriv
