@@ -80,6 +80,12 @@ dialog help_window {
 	set f [open $filename r]
 	set txt [read $f]
 	close $f
+
+        # Fix for 
+        if [string match -nocase "*ChangeLog" $filename] {
+            set txt "<html><body><pre>$txt</pre></body></html>"
+        }
+
 	feedback .help_feedback -steps [set slot(len) [string length $txt]] \
 	    -title "Rendering HTML"
 	.help_feedback grab

@@ -9,6 +9,7 @@ Mon Oct 21 22:42:34 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 	* procs_list.tcl:
 	* windows_list.tcl: bug # 624268 - always namespace qualify commands
 	sent to the inspectee to avoid name clashes.
+	* help.tcl: Fixed bug #624634 - formatting of ChangeLog view.
 	
 Wed Oct 09 01:27:43 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 
