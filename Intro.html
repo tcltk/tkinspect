@@ -4,35 +4,48 @@
 </head>
 
 <body>
-<center><h1>Tkinspect</h1></center>
+<center><h1>Tkinspect Introduction</h1></center>
 
 <b>tkinspect</b> is an inspector for Tk applications.  It uses Tk's
-<code>send</code> command to retreive infomation from other Tk
-applications.  The default <b>tkinspect</b> main window has 4 areas:
+<tt>send</tt> command to retreive infomation from other Tk
+applications.  When you choose an application through the
+<b>File/Select Interpreter</b> menu, <a href=Lists.html>three
+lists</a> will be filled with the names of the procs, globals, and
+windows the the application.  Clicking on one of those names will fill
+the <a href=Value.html>value window</a> with the definition of the
+proc, the value of the global variable, or various information about
+the window.  The <a href=Value.html>value window</a> is editable and
+its contents can be sent back to the selected application.<p>
+
+Tcl commands can be sent to the seleted application using the
+<b>Command:</b> entry, or through a <a href=Cmdline.html>command
+line</a> (via the <b>File/New Command Line</b> menu) interface to the
+application.  The command line is nearly identical to Tk's demo
+<tt>rmt</tt>.<p>
+
+For further information, select a topic from the help window's
+<b>Topics</b> menu or from the list below:
 
 <ul>
-  <li> <a href=Menu.html>The Menu Bar</a>
-  <li> The Command/Button Window
+  <li> <a href=Intro.html>Tkinspect Introduction</a>
+  <li> <a href=Value.html>The Value Window</a>
   <li> <a href=Lists.html>The Lists</a>
-  <li> <a href=Value.html>The Value</a>
+       <ul>
+	 <li> <a href=Procs.html>The Procs List</a>
+	 <li> <a href=Globals.html>The Globals List</a>
+	 <li> <a href=Windows.html>The Windows List</a>
+       </ul>
+  <li> <a href=Miscellany.html>Miscellany</a>: how <b>tkinspect</b>
+       starts up, how to customize, etc.
+  <li> <a href=Notes.html>Notes</a>: notes about <b>tkinspect</b>
+  <li> <a href=WhatsNew.html>Whats New</a>: what's new in this
+       version.
+  <li> <a href=ChangeLog.html>Tkinspect ChangeLog</a>: a detailed list
+       of changes.
 </ul>
 
-When you choose an application through the <b>File/Select
-Interpreter</b> menu, the lists will be filled with the names of the
-procs, globals, and windows the the application.  Clicking on one of
-those names will fill the <a href=Value.html>value window</a> with the
-definition of the proc, the value of the global variable, or
-information about the window.  The value window is editable and the
-contents can be sent back to the selected application.<p>
-
-You can type Tcl commands at the seleted application using the
-<b>Command:</b> entry.  Your command is sent when you hit Return, or
-when you press the <b>Send Command</b> button.
-
-
 <hr>
-<address>Sam Shen</address>
 <!-- hhmts start -->
-Last modified: Thu Jun  1 21:39:30 1995
+Last modified: Sun Jun  4 21:25:10 1995
 <!-- hhmts end -->
 </body> </html>
