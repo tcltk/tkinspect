@@ -162,6 +162,8 @@ widget tkinspect_list {
 	    -command "$self edit_filter"
 	$slot(menu) add command -label "Update This List" -underline 0 \
 	    -command "$self do_update_self"
+	$slot(menu) add command -label "Remove This List" -underline 0 \
+	    -command "$self remove"
     }
     method reconfig {} {
 	$self.title config -text "$slot(title):"
@@ -177,7 +179,7 @@ widget tkinspect_list {
     method update_needed {} {
 	if ![info exists slot(update_pending)] {
 	    set slot(update_pending) 1
-	    after 0 $self do_update
+	    after idle "if \[winfo exists $self\] \"$self do_update\""
 	}	
     }
     method do_update {} {
