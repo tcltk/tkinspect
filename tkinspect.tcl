@@ -16,8 +16,8 @@ set tkinspect(list_classes) {
     "canvas_list Canvases"
 }
 set tkinspect(help_topics) {
-    Intro Value Lists Procs Globals Windows Value Miscellany Notes
-    WhatsNew ChangeLog
+    Intro Value Lists Procs Globals Windows Images Canvases Menus
+    Value Miscellany Notes WhatsNew ChangeLog
 }
 
 wm withdraw .
