@@ -20,7 +20,8 @@ widget images_list {
     }
     method update {target} {
 	$self clear
-	foreach image [lsort [send $target image names]] {
+        set cmd [list if {[info command image] != {}} {image names}]
+	foreach image [lsort [send $target $cmd]] {
 	    $self append $image
 	}
     }

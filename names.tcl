@@ -22,7 +22,7 @@ namespace eval names {
    proc procs target {
       set result {}
       foreach n [names $target] {
-         foreach p [send $target namespace eval $n info procs] {
+         foreach p [send $target namespace eval $n ::info procs] {
             lappend result "$n\::$p"
          }
       }
@@ -32,7 +32,7 @@ namespace eval names {
    proc vars target {
       set result {}
       foreach n [names $target] {
-         foreach v [send $target info vars ${n}::*] {
+         foreach v [send $target ::info vars ${n}::*] {
             lappend result $v
          }
       }

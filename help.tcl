@@ -70,9 +70,14 @@ dialog help_window {
 	$self read_topic $topic
     }
     method read_topic {topic} {
+        # probably should use uri::geturl from tcllib
 	set slot(topic) $topic
 	wm title $self "Help: $topic"
-	set f [open $slot(helpdir)/$topic.html r]
+        set filename [file join $slot(helpdir) $topic]
+        if {![file exist $filename]} {
+            append $filename .html
+        }
+	set f [open $filename r]
 	set txt [read $f]
 	close $f
 	feedback .help_feedback -steps [set slot(len) [string length $txt]] \
@@ -98,7 +103,7 @@ dialog help_window {
 	}
     }
     method follow_link {link} {
-	$self show_topic [file root $link]
+	$self show_topic $link
     }
     method forward {} {
 	if {$slot(rendering) || ($slot(history_ndx)+1) >= $slot(history_len)} return

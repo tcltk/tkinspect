@@ -1,5 +1,13 @@
+Fri Mar 22 15:53:54 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
+	
+	* names.tcl: Bug #533642: send ::info in case info is redefined.
+	* help.tcl: Get the html help viewer to accept non-html filenames.
+	* windows_info.tcl: handle interps without Tk commands
+	* images_list.tcl: handle interps without Tk commands
+
 Fri Mar 22 01:04:59 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 
+	* version.tcl: Released version 5.1.6p7
 	* globals_list.tcl: 
 	* value.tcl: Bug #533367: use default Tk file selection dialogs.
 
