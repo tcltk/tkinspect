@@ -172,7 +172,7 @@ widget tkinspect_list {
 	}
     }
     method click {x y} {
-	run_command [$self.list get @$x,$y]
+	$self run_command [$self.list get @$x,$y]
     }
     method run_command {item} {
 	if [string length $slot(command)] {
@@ -183,7 +183,8 @@ widget tkinspect_list {
 	}	
     }
     method remove {} {
-	$slot(main) destroy_menu $slot(title)
+	$slot(main) delete_menu $slot(title)
+	$slot(main) delete_list $self
 	object_delete $self
     }
     method edit_filter {} {
