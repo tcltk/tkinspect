@@ -31,7 +31,7 @@ proc tkinspect_widgets_init {} {
     global tkinspect_library
     foreach file {
 	lists.tcl procs_list.tcl globals_list.tcl windows_list.tcl
-	about.tcl value.tcl help.tcl
+	about.tcl value.tcl help.tcl cmdline.tcl
     } {
 	uplevel #0 source $tkinspect_library/$file
     }
@@ -46,14 +46,14 @@ proc tkinspect_about {} {
 dialog tkinspect_main {
     param default_lists "procs_list globals_list windows_list"
     param target ""
-    member counter -1
     member get_window_info 1
     member last_list {}
     member list_counter -1
     member lists ""
+    member cmdline_counter -1
+    member cmdlines ""
     method create {} {
 	global tkinspect
-	$self config -highlightthickness 0 -bd 2
 	pack [frame $self.menu -bd 2 -relief raised] -side top -fill x
 	menubutton $self.menu.file -menu $self.menu.file.m -text "File" \
 	    -underline 0
@@ -63,6 +63,8 @@ dialog tkinspect_main {
 	    -menu $self.menu.file.m.interps
 	$m add command -label "New Window" -underline 0 \
 	    -command tkinspect_create_main_window
+	$m add command -label "New Command Line" -underline 12 \
+	    -command "$self add_cmdline"
 	$m add command -label "Update Lists" -underline 0 \
 	    -command "$self update_lists"
 	$m add separator
@@ -124,6 +126,9 @@ dialog tkinspect_main {
     method set_target {target} {
 	set slot(target) $target
 	$self update_lists
+	foreach cmdline $slot(cmdlines) {
+	    $cmdline set_target $target
+	}
 	$self status "Remote interpreter is \"$target\""
 	wm title $self "Tkinspect: $target"
     }
@@ -180,6 +185,16 @@ dialog tkinspect_main {
 	set ndx [lsearch -exact $slot(lists) $list]
 	set slot(lists) [lreplace $slot(lists) $ndx $ndx]
     }
+    method add_cmdline {} {
+	set cmdline \
+	  [command_line $self.cmdline[incr slot(cmdline_counter)] -main $self]
+	$cmdline set_target $slot(target)
+	lappend slot(cmdlines) $cmdline
+    }
+    method delete_cmdline {cmdline} {
+	set ndx [lsearch -exact $slot(cmdlines) $cmdline]
+	set slot(cmdlines) [lreplace $slot(cmdlines) $ndx $ndx]
+    }
     method add_menu {name} {
 	set w $self.menu.[string tolower $name]
 	menubutton $w -menu $w.m -text $name -underline 0
@@ -212,7 +227,7 @@ proc tkinspect_create_main_window {args} {
     return $w
 }
 
-source $tk_library/tkerror.tcl
+auto_load tkerror
 rename tkerror tk_tkerror
 proc tkinspect_failure {reason} {
     global tkinspect
@@ -235,3 +250,6 @@ if [file exists ~/.tkinspect_opts] {
     source ~/.tkinspect_opts
 }
 tkinspect_create_main_window
+if [file exists .tkinspect_init] {
+    source .tkinspect_init
+}
