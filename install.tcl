@@ -1,4 +1,4 @@
-#!/usr/local/bin/wish -f
+#!/usr/local/bin/wish
 #
 # $Id$
 #
@@ -158,9 +158,10 @@ proc install {} {
 	log "ok.\n"
     }
     if ![install_files $libdir {
-	about.tcl defaults.tcl lists.tcl globals_list.tcl procs_list.tcl
-	windows_list.tcl images_list.tcl value.tcl stl.tcl sls.ppm version.tcl
-	help.tcl cmdline.tcl interface.tcl tclIndex
+	about.tcl defaults.tcl windows_info.tcl lists.tcl globals_list.tcl
+	procs_list.tcl windows_list.tcl images_list.tcl menus_list.tcl
+	value.tcl stl.tcl sls.ppm version.tcl help.tcl cmdline.tcl
+	interface.tcl tclIndex
 	Intro.html Lists.html Procs.html Globals.html Windows.html
 	Value.html Miscellany.html Notes.html WhatsNew.html ChangeLog.html
     }] {
