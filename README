@@ -1,20 +1,19 @@
-			tkinspect, release 5.0.2
-			    (Feb 10, 1995)
+			tkinspect, release 5.1.1
+			    (June 5, 1995)
 
 This is the 5th release of my browser for Tk programs.  This version
-of tkinspect requires Tk 4.0b2 or better.
+of tkinspect requires Tk 4.0 or better (tested only with Tk 4.0b3).
 
 To install: type "wish -f install.tcl", fill out the form, and hit the
 install button.
 
 Hopefully you can learn how to use tkinspect by selecting an
 interpreter (via the File, Select Interpreter menu item) and then
-clicking on things.  Unlike tkinspect-4 there is no online help (but
-writing some is on my todo list.)
+clicking on things.  This version includes a online help system.
 
 tkinspect itself is still public domain, you may do whatever you want
 with it.  However, tkinspect uses a hacked down library that I've
-written at LBL, so the files in stl-lite are copyright 1994 Lawrence
+written at LBL, so the files in stl-lite are copyright 1995 Lawrence
 Berkeley Lab.  See stl-lite/COPYRIGHT for the full copyright notice.
 
 Please send me any comments or suggestions you might have, along with
