@@ -8,8 +8,10 @@ exec @wish@ -f "$0" ${1+"$@"}
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
 set tkinspect(list_classes) "procs_list globals_list windows_list"
-set tkinspect(help_topics) \
-    "Intro Lists Procs Globals Windows Value Notes Contents"
+set tkinspect(help_topics) {
+    Intro Value Lists Procs Globals Windows Value Miscellany Notes
+    WhatsNew ChangeLog
+}
 
 wm withdraw .
 
@@ -89,6 +91,8 @@ dialog tkinspect_main {
 		-underline 0
 	}
 	pack [set f [frame $self.buttons -bd 0]] -side top -fill x
+	label $f.cmd_label -text "Command:"
+	pack $f.cmd_label -side left
 	entry $f.command -bd 2 -relief sunken
 	bind $f.command <Return> "$self send_command \[%W get\]"
 	pack $f.command -side left -fill x -expand 1
