@@ -1,3 +1,8 @@
+Thu Mar 20 10:01:59 2003  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* windows_list.tcl: Applied patch from bug #684608 by Achim Bursian
+	for garbled bindings display in the window view.
+
 Mon Oct 21 22:42:34 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 
 	* afters_list.tcl:

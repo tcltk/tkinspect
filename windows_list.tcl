@@ -113,7 +113,7 @@ widget windows_list {
 	set result "# packing info for slaves of [list $window]\n"
 	foreach slave [send $target [list ::pack slaves $window]] {
 	    $self format_packing_info result $slave \
-		[send $target [list pack info $slave]]
+		[send $target [list ::pack info $slave]]
 	}
 	return $result
     }
@@ -128,11 +128,11 @@ widget windows_list {
 	set result "# bindtags of [list $window]\n"
 	set tags [send $target [list ::bindtags $window]]
 	append result [list bindtags $window $tags]
-	append result "\n# bindings (in bindtag order)..."
+	append result "\n\n# bindings (in bindtag order)..."
 	foreach tag $tags {
 	    foreach sequence [send $target [list ::bind $tag]] {
 		append result "\nbind $tag $sequence "
-		lappend result [send $target [list bind $tag $sequence]]
+		append result [list [send $target [list ::bind $tag $sequence]]]
 	    }
 	}
 	append result "\n"
@@ -142,7 +142,7 @@ widget windows_list {
 	set result "# bindings of [list $window]"
 	foreach sequence [send $target [list ::bind $window]] {
 	    append result "\nbind $window $sequence "
-	    lappend result [send $target [list ::bind $window $sequence]]
+	    append result [list [send $target [list ::bind $window $sequence]]]
 	}
 	append result "\n"
 	return $result
@@ -152,7 +152,7 @@ widget windows_list {
 	set result "# class bindings for $window\n# class: $class"
 	foreach sequence [send $target [list ::bind $class]] {
 	    append result "\nbind $class $sequence "
-	    lappend result [send $target [list ::bind $class $sequence]]
+	    append result [list [send $target [list ::bind $class $sequence]]]
 	}
 	append result "\n"
 	return $result
