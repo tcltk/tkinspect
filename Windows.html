@@ -7,7 +7,9 @@
 <center><h1>Windows List</h1></center>
 
 The <b>Windows List</b> is <b>tkinspect</b>'s most complicated list.
-The <b>Windows</b> menu contains the following items:
+In addition to the <a href=List.html>standard list operations</a>, the
+<b>Windows</b> menu contains the following items that control what
+information about a window to display:
 
 <ul>
   <li> <b>Window Configuration</b> shows the configuration of the window.
@@ -15,17 +17,46 @@ The <b>Windows</b> menu contains the following items:
        packed the window into its parent.
   <li> <b>Slave Window Packing</b> shows the <tt>pack</tt>
        commands that packed the slaves of the window.
+  <li> <b>Window Bindtags &amp; Bindings</b> shows the current
+       bindtag order along with the bindings of each of the tags.
   <li> <b>Window Bindtags</b> shows the current bindtag order of the
        window.
-  <li> <b>Window Bindtags &amp; Bindings</b> shows the current
-       bindtag order along with the bindings of the window.
+  <li> <b>Window Bindings</b> shows just the bindings for the window.
+  <li> <b>Window Class Bindings</b> shows the bindings for the
+       window's class.
+</ul>
+
+The following options avoid common pitfalls in sending back window
+values:
+
+<ul>
   <li> <b>Filter Empty Window Options</b> removes window options that
-       are empty (<tt>{}</tt>) from values that are sent.
+       are empty (<tt>{}</tt>) from values that are sent.  Some Tk
+       configuration parameters are displayed as empty, but setting
+       them to <tt>{}</tt> can mean something different.  For example,
+       canvas <tt>scrollregion</tt>'s.
+  <li> <b>Filter Window -class Options</b> removes <tt>-class</tt>
+       options from values that are sent.  Setting the window class of
+       <tt>frame</tt>'s and
+       <tt>toplevel</tt>'s after they've been created is an error.
+  <li> <b>Filter Pack -in Options</b> removes <tt>-in</tt> options
+       from values that are sent.
+</ul>
+
+The following options control when &amp; how windows are retreived:
+
+<ul>
+  <li> <b>Get Window Information</b> controls whether or not the
+       windows should be retrieved when a new interpreter is selected
+       or the lists are updated.  You may want to turn this on if
+       getting the list of windows takes a long time.
+  <li> <b>Use Feedback When Getting Windows</b> controls whether or
+       not the little feedback percentage bar appears when the windows
+       list is created.
 </ul>
 
 <hr>
-<address>Sam Shen</address>
 <!-- hhmts start -->
-Last modified: Sun Jun  4 01:04:43 1995
+Last modified: Sun Jun  4 22:39:19 1995
 <!-- hhmts end -->
 </body> </html>
