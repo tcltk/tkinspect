@@ -8,6 +8,8 @@ exec @wish@ -f "$0" ${1+"$@"}
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
 set tkinspect(list_classes) "procs_list globals_list windows_list"
+set tkinspect(help_topics) \
+    "Intro Lists Procs Globals Windows Value Notes Contents"
 
 wm withdraw .
 
@@ -29,7 +31,7 @@ proc tkinspect_widgets_init {} {
     global tkinspect_library
     foreach file {
 	lists.tcl procs_list.tcl globals_list.tcl windows_list.tcl
-	about.tcl value.tcl
+	about.tcl value.tcl help.tcl
     } {
 	uplevel #0 source $tkinspect_library/$file
     }
@@ -83,7 +85,12 @@ dialog tkinspect_main {
 	    -underline 0
 	pack $self.menu.help -side right
 	set m [menu $self.menu.help.m]
-	$m add command -label "About..." -command tkinspect_about
+	$m add command -label "About..." -command tkinspect_about \
+	    -underline 0
+	foreach topic $tkinspect(help_topics) {
+	    $m add command -label $topic -command [list $self help $topic] \
+		-underline 0
+	}
 	pack [set f [frame $self.buttons -bd 0]] -side top -fill x
 	entry $f.command -bd 2 -relief sunken
 	bind $f.command <Return> "$self send_command \[%W get\]"
@@ -183,6 +190,17 @@ dialog tkinspect_main {
 	set w $self.menu.[string tolower $name]
 	pack forget $w
 	destroy $w
+    }
+    method help {topic} {
+	global tkinspect tkinspect_library
+	if [winfo exists $self.help] {
+	    wm deiconify $self.help
+	} else {
+	    help_window $self.help -topics $tkinspect(help_topics) \
+		-helpdir $tkinspect_library
+	    center_window $self.help
+	}
+	$self.help show_topic $topic
     }
 }
 
