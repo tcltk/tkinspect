@@ -1,3 +1,9 @@
+Wed Oct 09 01:27:43 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
+
+	* tkinspect.tcl:
+	* globals_list.tcl: Implemented trace for all the supported 'send'
+	varieties. This fixes bug #533493.
+	
 Sat Apr 20 01:27:46 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 
 	* windows_list.tcl: Fixed bug #546259: erroneous use of 'config'

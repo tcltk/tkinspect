@@ -30,16 +30,18 @@ dialog variable_trace {
 	text $self.t -yscroll "$self.sb set" -setgrid 1
 	pack $self.sb -side right -fill y
 	pack $self.t -side right -fill both -expand 1
+        set where [set ::[subst $slot(main)](target,self)]
 	if {![send $slot(target) array exists $slot(variable)]} {
-	    set slot(trace_cmd) "send [winfo name .] $self update_scalar"
+	    set slot(trace_cmd) "send $where $self update_scalar"
 	    $self update_scalar "" "" w
 	    set slot(is_array) 0
 	    set title "Trace Scalar"
 	} else {
-	    set slot(trace_cmd) "send [winfo name .] $self update_array"
+	    set slot(trace_cmd) "send $where $self update_array"
 	    set slot(is_array) 1
 	    set title "Trace Array"
 	}
+        $self check_remote_send
 	send $slot(target) \
 	    [list trace variable $slot(variable) wu $slot(trace_cmd)]
 	wm title $self "$title: $slot(target)/$slot(variable)"
@@ -101,6 +103,56 @@ dialog variable_trace {
 	puts $fp [$self.t get 1.0 end]
 	close $fp
 	$slot(main) status "Trace saved to \"$file\"."
+    }
+    method check_remote_send {} {
+        # ensure that the current target has a valid send command
+        # This is commonly not the case under Windows.
+        set cmd [send $slot(target) [list info commands ::send]]
+        set type [set ::[subst $slot(main)](target,type)]
+
+        # If we called in using 'comm' then even if we do have a built
+        # in send we need to also support using comm.
+        if {[string match $type "comm"]} {
+            set script {
+                if [string match ::send [info command ::send]] {
+                    rename ::send ::tk_send
+                }
+                proc send {app args} {
+                    if [string match {[0-9]*} $app] {
+                        eval ::comm::comm send [list $app] $args
+                    } else {
+                        eval ::tk_send [list $app] $args
+                    }
+                }
+            }
+            set cmd [send $slot(target) $script]
+            $slot(main) status "comm: $cmd"
+        }
+
+        if {$cmd == {}} {
+            switch -exact -- $type {
+                winsend {
+                    set script {
+                        proc ::send {app args} {
+                            eval winsend send [list $app] $args
+                        }
+                    }
+                    send $slot(target) $script
+                }
+                dde {
+                    set script {
+                        proc send {app args} {
+                            eval dde eval [list $app] $args
+                        }
+                    }
+                    send $slot(target) $script
+                }
+                default {
+                    $slot(main) status "Target requires \"send\" command."
+                }
+            }
+        }
+        return $cmd
     }
 }
 

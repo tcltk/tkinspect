@@ -227,9 +227,15 @@ dialog tkinspect_main {
     method close {} {
 	after 0 destroy $self
     }
-    method set_target {target} {
+    method set_target {target {type send}} {
         global tkinspect
 	set slot(target) $target
+        set slot(target,type) $type
+        if {$type == "comm"} {
+            set slot(target,self) [comm::comm self]
+        } else {
+            set slot(target,self) [winfo name .]
+        }
 	$self update_lists
 	foreach cmdline $slot(cmdlines) {
 	    $cmdline set_target $target
@@ -271,7 +277,7 @@ dialog tkinspect_main {
             set winsend 1
             foreach interp [winsend interps] {
                 $m add command -label $interp \
-                    -command [list $self set_target $interp]
+                    -command [list $self set_target $interp winsend]
             }
         }
         if {[package provide dde] != {}} {
@@ -284,7 +290,7 @@ dialog tkinspect_main {
                     set app $label
                 }
                 $m add command -label $label \
-                    -command [list $self set_target $app]
+                    -command [list $self set_target $app dde]
             }
         } else {
             foreach interp [winfo interps] {
@@ -303,7 +309,7 @@ dialog tkinspect_main {
 		set label "$interp ([file tail [send $interp set argv0]])"
 	    }
 	    $m add command -label $label \
-		-command [list $self set_target $interp]
+		-command [list $self set_target $interp comm]
 	}
     }
     method status {msg} {
@@ -446,7 +452,7 @@ dialog connect_interp {
 	if ![string match {[0-9]*} $text] return
 	comm::comm connect $text
 	wm withdraw $self
-	$slot(value) set_target $text
+	$slot(value) set_target $text comm
     }
 }
 
