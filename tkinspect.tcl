@@ -5,6 +5,7 @@ exec wish "$0" ${1+"$@"}
 # $Id$
 #
 
+set tkinspect(title) "Tkinspect"
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
 set tkinspect(list_classes) {
@@ -45,7 +46,14 @@ if [file exists @tkinspect_library@/tclIndex] {
 # Emulate the 'send' command using the dde package if available.
 if {[info command send] == {}} {
     if {![catch {package require dde}]} {
-        dde servername TkInspect-[pid]
+        array set dde [list count 0 topic $tkinspect(title)]
+        while {[dde services TclEval $dde(topic)] != {}} {
+            incr dde(count)
+            set dde(topic) "$tkinspect(title) #$dde(count)"
+        }
+        dde servername $dde(topic)
+        set tkinspect(title) $dde(topic)
+        unset dde
         proc send {app args} {
             eval dde eval [list $app] $args
         }
@@ -171,8 +179,8 @@ dialog tkinspect_main {
 	label $self.status.l -bd 2 -relief sunken -anchor w
 	pack $self.status.l -side left -fill x -expand 1
 	set slot(windows_info) [object_new windows_info]
-	wm iconname $self "Tkinspect"
-	wm title $self "Tkinspect: $slot(target)"
+	wm iconname $self $tkinspect(title)
+	wm title $self "$tkinspect(title): $slot(target)"
 	$self status "Ready."
     }
     method reconfig {} {
@@ -186,6 +194,7 @@ dialog tkinspect_main {
 	after 0 destroy $self
     }
     method set_target {target} {
+        global tkinspect
 	set slot(target) $target
 	$self update_lists
 	foreach cmdline $slot(cmdlines) {
@@ -193,7 +202,7 @@ dialog tkinspect_main {
 	}
 	set name [file tail [send $target set argv0]]
 	$self status "Remote interpreter is \"$target\" ($name)"
-	wm title $self "Tkinspect: $target ($name)"
+	wm title $self "$tkinspect(title): $target ($name)"
     }
     method update_lists {} {
 	if {$slot(target) == ""} return
