@@ -5,7 +5,7 @@
 
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
-set tkinspect(release) 5alpha
+set tkinspect(release) 5.0.1
 set tkinspect(release_date) "Feb 7, 1995"
 set tkinspect(list_classes) "procs_list globals_list windows_list"
 
@@ -130,8 +130,9 @@ dialog tkinspect_main {
     }
     method select_list_item {list item} {
 	set slot(last_list) $list
+	set target [$self target]
 	$self.value set_value "[$list get_item_name] $item" \
-	    [$list retrieve $slot(target) $item] \
+	    [$list retrieve $target $item] \
 	    [list $self select_list_item $list $item]
 	$self.value set_send_filter [list $list send_filter]
 	$self status "Showing \"$item\""
