@@ -1,0 +1,38 @@
+<html><head>
+<title>Tkinspect</title>
+<!-- $Id$ -->
+</head>
+
+<body>
+<center><h1>Tkinspect</h1></center>
+
+<b>tkinspect</b> is an inspector for Tk applications.  It uses Tk's
+<code>send</code> command to retreive infomation from other Tk
+applications.  The default <b>tkinspect</b> main window has 4 areas:
+
+<ul>
+  <li> <a href=Menu.html>The Menu Bar</a>
+  <li> The Command/Button Window
+  <li> <a href=Lists.html>The Lists</a>
+  <li> <a href=Value.html>The Value</a>
+</ul>
+
+When you choose an application through the <b>File/Select
+Interpreter</b> menu, the lists will be filled with the names of the
+procs, globals, and windows the the application.  Clicking on one of
+those names will fill the <a href=Value.html>value window</a> with the
+definition of the proc, the value of the global variable, or
+information about the window.  The value window is editable and the
+contents can be sent back to the selected application.<p>
+
+You can type Tcl commands at the seleted application using the
+<b>Command:</b> entry.  Your command is sent when you hit Return, or
+when you press the <b>Send Command</b> button.
+
+
+<hr>
+<address>Sam Shen</address>
+<!-- hhmts start -->
+Last modified: Thu Jun  1 21:39:30 1995
+<!-- hhmts end -->
+</body> </html>
