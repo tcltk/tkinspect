@@ -10,10 +10,14 @@ widget images_list {
     method create {} {
 	tkinspect_list:create $self
 	$slot(menu) add separator
-	$slot(menu) add command -label "Show Image" -underline 5 \
-	    -command "$self show_image"
+	$slot(menu) add command -label "Display Image" -underline 0 \
+	    -command "$self display_image"
     }
     method get_item_name {} { return image }
+    method update_self {target} {
+	$slot(main) windows_info update $target
+	$self update $target
+    }
     method update {target} {
 	$self clear
 	foreach image [lsort [send $target image names]] {
@@ -34,7 +38,7 @@ widget images_list {
     method send_filter {value} {
 	return $value
     }
-    method show_image {} {
+    method display_image {} {
 	set target [$slot(main) target]
 	if ![string length $slot(current_item)] {
 	    tkinspect_failure \
