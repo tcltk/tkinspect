@@ -1,0 +1,49 @@
+<html> <head>
+<title>Miscellany</title>
+<!-- $Id$ -->
+</head>
+
+<body>
+<center><h1>Tkinspect Startup</h1></center>
+
+<b>tkinspect</b> sources <tt>~/.tkinspect_opts</tt> after it has
+initialized various defaults, but before it creates any windows.  Here
+you may place <tt>option add</tt> commands and the like to customize
+<b>tkinspect</b>'s look and function.<p>
+
+<b>tkinspect</b> then creates a main window, and then sources
+<tt>.tkinspect_opts</tt> (in the current directory).  Here you might
+put commands that automatically selects an interpreter, opens a
+command line, sets up variable traces, etc.
+
+<center><h1>Tkinspect Interface</h1></center>
+
+The following functions are available for controlling <b>tkinspect</b>
+or for use in startup files:
+
+<ul>
+  <li> <tt>tkinspect_set_target target</tt> sets <tt>target</tt> as
+       the current interpreter.<p>
+  <li> <tt>tkinspect_select type name</tt> selects a <a
+       href=Procs.html>proc</a>, <a href=Globals.html>global</a>, or
+       <a href=Windows.html</a>window</a>.  <tt>type</tt> should be
+       <tt>proc</tt>, <tt>global</tt>, or <tt>window</tt>.
+       <tt>name</tt> should be the name of the thing.<p>
+  <li> <tt>tkinspect_create_cmdline</tt> creates a command line
+       interface.<p>
+  <li> <tt>tkinspect_help ?topic?</tt> brings up the help window
+       containing <tt>topic</tt>.  <tt>topic</tt> defaults to
+       <b>Intro</b>.<p>
+  <li> <tt>tkinspect_value_text_window</tt> returns the name of the text
+       window in the <a href=Value.html>value</a>.<p>
+  <li> <tt>tkinspect_send_value</tt> sends the current value.<p>
+  <li> <tt>tkinspect_detach_value</tt> detaches the value window.<p>
+  <li> <tt>tkinspect_trace_global var</tt> creates a trace on the
+       global variable <tt>var</tt>.<p>
+</ul>
+
+<hr>
+<!-- hhmts start -->
+Last modified: Mon Jun  5 01:40:24 1995
+<!-- hhmts end -->
+</body> </html>
