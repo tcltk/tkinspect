@@ -38,6 +38,14 @@ object_class windows_info {
     }
     method get_class {target w} {
 	if ![info exists slot($w.class)] {
+	    if ![send $target winfo exists $w] {
+		# the window no longer exists, so delete it from our list
+		set ndx [lsearch -exact $slot(windows) $w]
+		if {$ndx >= 0} {
+		    set slot(windows) [lreplace $slot(windows) $ndx $ndx]
+		}
+		return ""
+	    }
 	    set slot($w.class) [send $target [list winfo class $w]]
 	}
 	return $slot($w.class)
