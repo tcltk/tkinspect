@@ -93,8 +93,9 @@ dialog variable_trace {
 	$self.t see end
     }
     method save {} {
-	filechooser $self.save -title "Save $slot(variable) Trace" -newfile 1
-	set file [$self.save run]
+	#filechooser $self.save -title "Save $slot(variable) Trace" -newfile 1
+	#set file [$self.save run]
+        set file [tk_getSaveFile -title "Save $slot(variable) Trace"]
 	if {![string length $file]} return
 	set fp [open $file w]
 	puts $fp [$self.t get 1.0 end]

@@ -1,3 +1,8 @@
+Fri Mar 22 01:04:59 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
+
+	* globals_list.tcl: 
+	* value.tcl: Bug #533367: use default Tk file selection dialogs.
+
 Thu Mar 21 15:27:53 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 
 	* tkinspect.tcl: Improved the dde send implementation and fixed

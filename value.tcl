@@ -123,8 +123,9 @@ widget value {
 	}
     }
     method save {} {
-	filechooser $self.fc -newfile 1 -title "Save Value"
-	set file [$self.fc run]
+	#filechooser $self.fc -newfile 1 -title "Save Value"
+	#set file [$self.fc run]
+        set file [tk_getSaveFile -title "Save Value"]
 	if ![string length $file] {
 	    $slot(main) status "Save cancelled."
 	    return
@@ -135,8 +136,9 @@ widget value {
 	$slot(main) status "Value saved to \"$file\""
     }
     method load {} {
-	filechooser $self.fc -title "Load Value"
-	set file [$self.fc run]
+	#filechooser $self.fc -title "Load Value"
+	#set file [$self.fc run]
+        set file [tk_getOpenFile -title "Load Value"]
 	if ![string length $file] {
 	    $slot(main) status "Load cancelled."
 	    return
