@@ -25,11 +25,11 @@ widget windows_list {
 	    -value slavepacking -label "Slave Window Packing" -underline 1 \
             -command "$self mode_changed"
 	$slot(menu) add radiobutton -variable [object_slotname mode] \
-	    -value bindtags -label "Window Bindtags" \
-	    -command "$self mode_changed" -underline 11
-	$slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value bindtagsplus -label "Window Bindtags & Bindings" \
 	    -command "$self mode_changed" -underline 16
+	$slot(menu) add radiobutton -variable [object_slotname mode] \
+	    -value bindtags -label "Window Bindtags" \
+	    -command "$self mode_changed" -underline 11
         $slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value bindings -label "Window Bindings" -underline 7 \
             -command "$self mode_changed"
@@ -37,9 +37,6 @@ widget windows_list {
 	    -value classbindings -label "Window Class Bindings" -underline 8 \
             -command "$self mode_changed"
         $slot(menu) add separator
-	$slot(menu) add checkbutton \
-	    -variable [object_slotname get_window_info] \
-            -label "Get Window Information" -underline 0
         $slot(menu) add checkbutton \
 	    -variable [object_slotname filter_empty_window_configs] \
             -label "Filter Empty Window Options"
@@ -49,6 +46,10 @@ widget windows_list {
         $slot(menu) add checkbutton \
 	    -variable [object_slotname filter_window_pack_in] \
             -label "Filter Pack -in Options"
+        $slot(menu) add separator
+	$slot(menu) add checkbutton \
+	    -variable [object_slotname get_window_info] \
+            -label "Get Window Information" -underline 0
 	$slot(menu) add checkbutton \
 	    -variable [object_slotname use_feedback] \
 	    -label "Use Feedback When Getting Windows"
