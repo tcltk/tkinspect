@@ -38,6 +38,11 @@ dialog help_window {
 	pack $self.text -in $self -side bottom -fill both -expand yes
 	bind $self <Key-f> "$self forward"
 	bind $self <Key-b> "$self back"
+	bind $self <Alt-Right> "$self forward"
+	bind $self <Alt-Left> "$self back"
+	bind $self <Key-space> "$self page_forward"
+	bind $self <Key-BackSpace> "$self page_back"
+	bind $self <Key-Delete> "$self page_back"
     }
     method reconfig {} {
 	set m $self.menu.topics.m
@@ -116,5 +121,11 @@ dialog help_window {
 	    update idletasks
 	    set slot(remaining) $n
 	}
+    }
+    method page_forward {} {
+	$self.text.t yview scroll 1 pages
+    }
+    method page_back {} {
+	$self.text.t yview scroll -1 pages
     }
 }
