@@ -10,6 +10,7 @@ dialog help_window {
     member history {}
     member history_ndx -1
     member history_len 0
+    member rendering 0
     method create {} {
 	frame $self.menu -relief raised -bd 2
 	menubutton $self.menu.topics -text "Topics" -underline 0 \
@@ -21,9 +22,9 @@ dialog help_window {
 	pack $self.menu.navigate -in $self.menu -side left
 	set m [menu $self.menu.navigate.m]
 	$m add command -label "Forward" -underline 0 -state disabled \
-	    -command "$self forward"
+	    -command "$self forward" -accelerator f
 	$m add command -label "Back" -underline 0 -state disabled \
-	    -command "$self back"
+	    -command "$self back" -accelerator b
 	$m add cascade -label "Go" -underline 0 -menu $m.go
 	menu $m.go -postcommand "$self fill_go_menu"
 	frame $self.text -bd 2 -relief raised
@@ -35,6 +36,8 @@ dialog help_window {
 	pack $self.text.t -in $self.text -side left -fill both -expand yes
 	pack $self.menu -in $self -side top -fill x
 	pack $self.text -in $self -side bottom -fill both -expand yes
+	bind $self <Key-f> "$self forward"
+	bind $self <Key-b> "$self back"
     }
     method reconfig {} {
 	set m $self.menu.topics.m
@@ -65,13 +68,14 @@ dialog help_window {
 	close $f
 	feedback .help_feedback -steps [set slot(len) [string length $txt]] \
 	    -title "Rendering HTML"
+	.help_feedback grab
 	set slot(remaining) $slot(len)
-	grab set .help_feedback
+	set slot(rendering) 1
 	tkhtml_set_render_hook "$self update_feedback"
 	tkhtml_set_command "$self follow_link"
 	tkhtml_render $self.text.t $txt
-	grab release .help_feedback
 	destroy .help_feedback
+	set slot(rendering) 0
 	set m $self.menu.navigate.m
 	if {($slot(history_ndx)+1) < $slot(history_len)} {
 	    $m entryconfig 1 -state normal
@@ -88,10 +92,12 @@ dialog help_window {
 	$self show_topic [file root $link]
     }
     method forward {} {
+	if {$slot(rendering) || ($slot(history_ndx)+1) >= $slot(history_len)} return
 	incr slot(history_ndx)
 	$self read_topic [lindex $slot(history) $slot(history_ndx)]
     }
     method back {} {
+	if {$slot(rendering) || $slot(history_ndx) <= 0} return
 	incr slot(history_ndx) -1
 	$self read_topic [lindex $slot(history) $slot(history_ndx)]
     }
