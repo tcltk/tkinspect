@@ -106,7 +106,7 @@ center_window .
 proc log {msg} {
     .log insert end "$msg"
     .log see end
-    update idletasks
+    update
 }
 
 proc install_files {dir files} {
