@@ -25,7 +25,9 @@ object_class windows_info {
     }
     method update {target} {
 	$self clear
-	set slot(windows) [send $target winfo children .]
+	if {[catch {set slot(windows) [send $target winfo children .]}]} {
+            set slot(windows) {}
+        }
 	feedback .feedback -title "Getting Windows" \
 	    -steps [llength $slot(windows)]
 	.feedback grab
