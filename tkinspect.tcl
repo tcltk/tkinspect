@@ -1,6 +1,6 @@
 #!/bin/sh
 #\
-exec @wish@ -f "$0" ${1+"$@"}
+exec @wish@ "$0" ${1+"$@"}
 #
 # $Id$
 #
@@ -12,6 +12,7 @@ set tkinspect(list_classes) {
     "globals_list Globals"
     "windows_list Windows"
     "images_list Images"
+    "menus_list Menus"
 }
 set tkinspect(help_topics) {
     Intro Value Lists Procs Globals Windows Value Miscellany Notes
@@ -39,6 +40,7 @@ proc tkinspect_widgets_init {} {
     foreach file {
 	lists.tcl procs_list.tcl globals_list.tcl windows_list.tcl
 	images_list.tcl about.tcl value.tcl help.tcl cmdline.tcl
+	windows_info.tcl menus_list.tcl
     } {
 	uplevel #0 source $tkinspect_library/$file
     }
@@ -57,6 +59,7 @@ dialog tkinspect_main {
     member lists ""
     member cmdline_counter -1
     member cmdlines ""
+    member windows_info
     method create {} {
 	global tkinspect
 	pack [frame $self.menu -bd 2 -relief raised] -side top -fill x
@@ -116,11 +119,15 @@ dialog tkinspect_main {
 	pack [frame $self.status] -side top -fill x
 	label $self.status.l -bd 2 -relief sunken -anchor w
 	pack $self.status.l -side left -fill x -expand 1
+	set slot(windows_info) [object_new windows_info]
 	wm iconname $self "Tkinspect"
 	wm title $self "Tkinspect: $slot(target)"
 	$self status "Ready."
     }
     method reconfig {} {
+    }
+    method destroy {} {
+	object_delete $slot(windows_info)
     }
     method close {} {
 	global tkinspect
@@ -138,6 +145,7 @@ dialog tkinspect_main {
     }
     method update_lists {} {
 	if {$slot(target) == ""} return
+	$slot(windows_info) update $slot(target)
 	foreach list $slot(lists) {
 	    $list update $slot(target)
 	}
@@ -237,6 +245,9 @@ dialog tkinspect_main {
 	    center_window $self.help
 	}
 	$self.help show_topic $topic
+    }
+    method windows_info {args} {
+	eval $slot(windows_info) $args
     }
 }
 
