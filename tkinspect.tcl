@@ -5,6 +5,8 @@ exec wish "$0" ${1+"$@"}
 # $Id$
 #
 
+package require Tk
+
 set tkinspect(title) "Tkinspect"
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
