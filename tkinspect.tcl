@@ -7,8 +7,6 @@ exec @wish@ -f "$0" ${1+"$@"}
 
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
-set tkinspect(release) 5.0.3
-set tkinspect(release_date) "Feb 10, 1995"
 set tkinspect(list_classes) "procs_list globals_list windows_list"
 
 wm withdraw .
@@ -20,6 +18,7 @@ if [file exists @tkinspect_library@/tclIndex] {
 }
 
 stl_lite_init
+version_init
 
 proc tkinspect_exit {} {
     destroy .
@@ -58,14 +57,16 @@ dialog tkinspect_main {
 	    -underline 0
 	pack $self.menu.file -side left
 	set m [menu $self.menu.file.m]
-	$m add cascade -label "Select Interpreter" \
+	$m add cascade -label "Select Interpreter" -underline 0 \
 	    -menu $self.menu.file.m.interps -command "$self fill_interp_menu"
-	$m add command -label "New Window" \
+	$m add command -label "New Window" -underline 0 \
 	    -command tkinspect_create_main_window
-	$m add command -label "Update Lists" -command "$self update_lists"
+	$m add command -label "Update Lists" -underline 0 \
+	    -command "$self update_lists"
 	$m add separator
-	$m add command -label "Close Window" -command "$self close"
-	$m add command -label "Exit" -command tkinspect_exit
+	$m add command -label "Close Window" -underline 0 \
+	    -command "$self close"
+	$m add command -label "Exit" -underline 0 -command tkinspect_exit
 	menu $self.menu.file.m.interps -tearoff 0
 	menubutton $self.menu.options -menu $self.menu.options.m \
 	    -text "Options" -underline 0
