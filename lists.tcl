@@ -142,15 +142,20 @@ widget tkinspect_list {
     member contents {}
     member search_index 0
     method create {} {
-	$self config -bd 2 -relief raised
-	pack [label $self.title -anchor w] -side top -fill x
-	scrollbar $self.sb -command "$self.list yview" -relief sunken -bd 1
-	listbox $self.list -relief sunken -exportselection 0 \
-	    -yscroll "$self.sb set" -selectmode single
-	bind $self.list <1> "$self click %x %y; continue"
-	bind $self.list <Key-space> "$self trigger; continue"
-	pack $self.sb -side right -fill y
-	pack $self.list -side right -fill both -expand yes
+        $self config -bd 0 -relief raised
+        pack [label $self.title -anchor w] -side top -fill x
+        frame $self.frame  
+        pack $self.frame -side top -fill x
+        scrollbar $self.sb -command "$self.list yview" -relief sunken -bd 1
+        scrollbar $self.sb2 -command "$self.list xview" -relief sunken -bd 1 -orient horizontal
+        listbox $self.list -bd 2 -relief groove -exportselection 0 \
+            -yscroll "$self.sb set" -selectmode single \
+            -xscroll "$self.sb2 set"
+        bind $self.list <1> "$self click %x %y; continue"
+        bind $self.list <Key-space> "$self trigger; continue"
+        pack $self.sb -in $self.frame -side right -fill y
+        pack $self.list -in $self.frame -side right -fill both -expand yes
+        pack $self.sb2 -side bottom -fill x
 	set slot(menu) [$slot(main) add_menu $slot(title)]
 	bind $self.list <3> "tk_popup $slot(menu) %X %Y"
 	$slot(menu) add command \

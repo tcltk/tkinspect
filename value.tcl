@@ -18,7 +18,7 @@ widget value {
     member hist_no 0
     member send_filter value_no_filter
     method create {} {
-	$self config -bd 2 -relief raised -highlightthickness 0
+	$self config -bd 0 -relief flat -highlightthickness 0
 	pack [frame $self.title] -side top -fill x
 	pack [label $self.title.l -text "Value:  "] -side left
 	menubutton $self.title.vname -anchor w -menu $self.title.vname.m \

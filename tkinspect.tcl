@@ -36,7 +36,7 @@ set tkinspect(help_topics) {
 if {[info commands itcl_info] != ""} {
 	set tkinspect(default_lists) "object_list procs_list globals_list windows_list"
 } else {
-	set tkinspect(default_lists) "namespaces_list procs_list globals_list"
+	set tkinspect(default_lists) "namespaces_list procs_list globals_list windows_list"
 }
 
 wm withdraw .
@@ -148,8 +148,8 @@ dialog tkinspect_main {
     member cmdlines ""
     member windows_info
     method create {} {
-	global tkinspect
-	pack [frame $self.menu -bd 2 -relief raised] -side top -fill x
+        global tkinspect 
+	pack [frame $self.menu -bd 2 -relief flat] -side top -fill x
 	menubutton $self.menu.file -menu $self.menu.file.m -text "File" \
 	    -underline 0
 	pack $self.menu.file -side left
@@ -195,6 +195,13 @@ dialog tkinspect_main {
 	    $m add command -label $topic -command [list $self help $topic] \
 		-underline 0
 	}
+
+        foreach w [winfo children $self.menu] {
+            $w configure -relief flat -bd 1
+            bind $w <Enter> {%W configure -relief raised -bd 1}
+            bind $w <Leave> {%W configure -relief flat -bd 1}
+        }
+
 	pack [set f [frame $self.buttons -bd 0]] -side top -fill x
 	label $f.cmd_label -text "Command:"
 	pack $f.cmd_label -side left
@@ -206,7 +213,14 @@ dialog tkinspect_main {
 	button $f.send_value -text "Send Value" \
 	    -command "$self.value send_value"
 	pack $f.send_command $f.send_value -side left
-	pack [frame $self.lists -bd 0] -side top -fill both
+
+        # change to use a panedwindow instead of a frame - Alex Caldwell
+        if {[package vcompare [package provide Tk] 8.3] == 1} {
+            pack [panedwindow $self.lists -showhandle 1] -side top -fill both
+        } else { 
+            pack [frame $self.lists -bd 0] -side top -fill both
+        } 
+    
 	value $self.value -main $self
 	pack $self.value -side top -fill both -expand 1
 	foreach list_class $tkinspect(default_lists) {
@@ -214,7 +228,7 @@ dialog tkinspect_main {
 	    set slot(${list_class}_is_on) 1
 	}
 	pack [frame $self.status] -side top -fill x
-	label $self.status.l -bd 2 -relief sunken -anchor w
+	label $self.status.l -anchor w -bd 0 -relief sunken
 	pack $self.status.l -side left -fill x -expand 1
 	set slot(windows_info) [object_new windows_info]
 	wm iconname $self $tkinspect(title)
@@ -353,15 +367,27 @@ dialog tkinspect_main {
 	lappend slot(lists) $list
 	$list_class $list -command "$self select_list_item $list" \
 	    -main $self
-	pack $list -side left -fill both -expand 1
+        # change to use panedwindow widget instead of frame
+        if {[package vcompare [package provide Tk] 8.3] == 1} {
+            $self.lists add $list -width 150
+        } else {
+            pack $list -side left -fill both -expand 1
+        }
     }
     method delete_list {list} {
+	global tk_patchLevel
 	set ndx [lsearch -exact $slot(lists) $list]
 	set slot(lists) [lreplace $slot(lists) $ndx $ndx]
-	pack forget $list
-	# for some reason if all the lists get unpacked the
-	# .lists frame doesn't collapse unless we force it
-	$self.lists config -height 1
+        # changed to use a panedwindow widget instead of a frame
+        if {[package vcompare [package provide Tk] 8.3] == 1} {
+            $self.lists forget $list
+        } else {
+            pack forget $list
+        
+            # for some reason if all the lists get unpacked the
+            # .lists frame doesn't collapse unless we force it
+            $self.lists config -height 1
+        }
 	set list_class [lindex [split $list .] 3]
 	set slot(${list_class}_is_on) 0
     }
@@ -377,7 +403,9 @@ dialog tkinspect_main {
     }
     method add_menu {name} {
 	set w $self.menu.[string tolower $name]
-	menubutton $w -menu $w.m -text $name -underline 0
+	menubutton $w -menu $w.m -text $name -underline 0 -bd 1 -relief flat
+        bind $w <Enter> {%W configure -relief raised -bd 1}
+        bind $w <Leave> {%W configure -relief flat -bd 0}
 	pack $w -side left
 	menu $w.m
 	return $w.m

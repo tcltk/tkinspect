@@ -1,3 +1,11 @@
+Sat Jun 21 22:35:03 2003  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* tkinspect.tcl: Merged in patch for paned views suppplied by
+	Alexander Caldwell <alcald@psnw.com>.
+	* lists.tcl: Also from AC's patch - added a horizontal scroll bar
+	to the view windows.
+	* tkinspect.tcl: Flattened various GUI items to improve the appearence
+	
 Fri Jun 20 23:59:01 2003  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
 	* tkinspect.tcl: Fix for bug #757926 to fix traces.
