@@ -5,8 +5,8 @@
 
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
-set tkinspect(release) 5
-set tkinspect(release_date) "Jan 30, 1995"
+set tkinspect(release) 5alpha
+set tkinspect(release_date) "Feb 6, 1995"
 
 wm withdraw .
 
@@ -47,9 +47,12 @@ dialog tkinspect_main {
     member counter -1
     member target
     member window_info_type config
+    member last_list
+    member last_item
     param filter_empty_window_configs 1
     param get_window_info 1
     param filter_window_class_config 1
+    param filter_window_pack_in 1
     method create {} {
 	global tkinspect_default
 	$self config -highlightthickness 0 -bd 2
@@ -65,7 +68,7 @@ dialog tkinspect_main {
 	$m add separator
 	$m add command -label "Close Window" -command "$self close"
 	$m add command -label "Exit" -command tkinspect_exit
-	menu $self.menu.file.m.interps
+	menu $self.menu.file.m.interps -tearoff 0
 	menubutton $self.menu.options -menu $self.menu.options.m \
 	    -text "Options" -bd 0
 	set m [menu $self.menu.options.m]
@@ -92,6 +95,9 @@ dialog tkinspect_main {
 	    -variable [object_slotname filter_window_class_config] \
             -label "Filter Window -class Options" -underline 0
         $m add checkbutton \
+	    -variable [object_slotname filter_window_pack_in] \
+            -label "Filter Pack -in Options" -underline 0
+        $m add checkbutton \
 	    -variable [object_slotname get_window_info] \
             -label "Get Window Information" -underline 0
 	pack $self.menu.options -side left
@@ -100,6 +106,15 @@ dialog tkinspect_main {
 	pack $self.menu.help -side right
 	set m [menu $self.menu.help.m]
 	$m add command -label "About..." -command tkinspect_about
+	pack [set f [frame $self.buttons -bd 0]] -side top -fill x
+	entry $f.command -bd 2 -relief sunken
+	bind $f.command <Return> "$self send_command \[%W get\]"
+	pack $f.command -side left -fill x -expand 1
+	button $f.send_command -text "Send Command" \
+	    -command "$self send_command"
+	button $f.send_value -text "Send Value" \
+	    -command "$self.value send_value"
+	pack $f.send_command $f.send_value -side left
 	pack [frame $self.lists -bd 0] -side top -fill both -expand 1
 	set slot(lists) ""
 	set i -1
@@ -133,6 +148,7 @@ dialog tkinspect_main {
 	wm title $self "Tkinspect: $target"
     }
     method update_lists {} {
+	if {$slot(target) == ""} return
 	foreach list $slot(lists) {
 	    $list update $slot(target)
 	}
@@ -141,13 +157,20 @@ dialog tkinspect_main {
 	foreach list $slot(lists) {
 	    if {[$list cget -class] == "Windows_list"} {
 		$list set_mode $slot(window_info_type)
+		if {$slot(last_list) == $list} {
+		    $self list_item_click $list $slot(last_item)
+		}
 	    }
 	}
     }
     method list_item_click {list item} {
+	set slot(last_item) $item
+	set slot(last_list) $list
 	$self.value set_value "[$list get_item_name] $item" \
-	    [$list retrieve $slot(target) $item]
+	    [$list retrieve $slot(target) $item] \
+	    [list $self list_item_click $list $item]
 	$self.value set_send_filter [list $list send_filter]
+	$self status "Showing \"$item\""
     }
     method fill_interp_menu {} {
 	set m $self.menu.file.m.interps
@@ -162,6 +185,15 @@ dialog tkinspect_main {
     }
     method target {} {
 	return $slot(target)
+    }
+    method send_command {cmd} {
+	set slot(last_list) ""
+	set slot(last_item) ""
+	set cmd [$self.buttons.command get]
+	$self.value set_value [list command $cmd] [send $slot(target) $cmd] \
+	    [list $self send_command $cmd]
+	$self.value set_send_filter ""
+	$self status "Command sent."
     }
 }
 
