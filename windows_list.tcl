@@ -102,7 +102,7 @@ widget windows_list {
     }
     method retrieve_packing {target window} {
 	set result "# packing info for [list $window]\n"
-	if [catch {send $target [list pack info $window]} info] {
+	if [catch {send $target [list ::pack info $window]} info] {
 	    append result "# $info\n"
 	} else {
 	    $self format_packing_info result $window $info
@@ -111,7 +111,7 @@ widget windows_list {
     }
     method retrieve_slavepacking {target window} {
 	set result "# packing info for slaves of [list $window]\n"
-	foreach slave [send $target [list pack slaves $window]] {
+	foreach slave [send $target [list ::pack slaves $window]] {
 	    $self format_packing_info result $slave \
 		[send $target [list pack info $slave]]
 	}
@@ -119,18 +119,18 @@ widget windows_list {
     }
     method retrieve_bindtags {target window} {
 	set result "# bindtags of [list $window]\n"
-	set tags [send $target [list bindtags $window]]
+	set tags [send $target [list ::bindtags $window]]
 	append result [list bindtags $window $tags]
 	append result "\n"
 	return $result
     }
     method retrieve_bindtagsplus {target window} {
 	set result "# bindtags of [list $window]\n"
-	set tags [send $target [list bindtags $window]]
+	set tags [send $target [list ::bindtags $window]]
 	append result [list bindtags $window $tags]
 	append result "\n# bindings (in bindtag order)..."
 	foreach tag $tags {
-	    foreach sequence [send $target [list bind $tag]] {
+	    foreach sequence [send $target [list ::bind $tag]] {
 		append result "\nbind $tag $sequence "
 		lappend result [send $target [list bind $tag $sequence]]
 	    }
@@ -140,9 +140,9 @@ widget windows_list {
     }
     method retrieve_bindings {target window} {
 	set result "# bindings of [list $window]"
-	foreach sequence [send $target [list bind $window]] {
+	foreach sequence [send $target [list ::bind $window]] {
 	    append result "\nbind $window $sequence "
-	    lappend result [send $target [list bind $window $sequence]]
+	    lappend result [send $target [list ::bind $window $sequence]]
 	}
 	append result "\n"
 	return $result
@@ -150,9 +150,9 @@ widget windows_list {
     method retrieve_classbindings {target window} {
 	set class [$slot(main) windows_info get_class $target $window]
 	set result "# class bindings for $window\n# class: $class"
-	foreach sequence [send $target [list bind $class]] {
+	foreach sequence [send $target [list ::bind $class]] {
 	    append result "\nbind $class $sequence "
-	    lappend result [send $target [list bind $class $sequence]]
+	    lappend result [send $target [list ::bind $class $sequence]]
 	}
 	append result "\n"
 	return $result

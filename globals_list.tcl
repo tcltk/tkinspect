@@ -31,7 +31,7 @@ dialog variable_trace {
 	pack $self.sb -side right -fill y
 	pack $self.t -side right -fill both -expand 1
         set where [set ::[subst $slot(main)](target,self)]
-	if {![send $slot(target) array exists $slot(variable)]} {
+	if {![send $slot(target) ::array exists $slot(variable)]} {
 	    set slot(trace_cmd) "send $where $self update_scalar"
 	    $self update_scalar "" "" w
 	    set slot(is_array) 0
@@ -43,7 +43,7 @@ dialog variable_trace {
 	}
         $self check_remote_send
 	send $slot(target) \
-	    [list trace variable $slot(variable) wu $slot(trace_cmd)]
+	    [list ::trace variable $slot(variable) wu $slot(trace_cmd)]
 	wm title $self "$title: $slot(target)/$slot(variable)"
 	wm iconname $self "$title: $slot(target)/$slot(variable)"
     }
@@ -52,14 +52,14 @@ dialog variable_trace {
     }
     method destroy {} {
 	send $slot(target) \
-	    [list trace vdelete $slot(variable) wu $slot(trace_cmd)]
+	    [list ::trace vdelete $slot(variable) wu $slot(trace_cmd)]
     }
     method update_scalar {args} {
 	set op [lindex $args end]
 	if {$op == "w"} {
 	    $self.t insert end-1c \
 		[list set $slot(variable) \
-		 [send $slot(target) [list set $slot(variable)]]]
+		 [send $slot(target) [list ::set $slot(variable)]]]
 	} else {
 	    $self.t insert end-1c [list unset $slot(variable)]
 	}
@@ -78,7 +78,7 @@ dialog variable_trace {
 	if {$op == "w"} {
 	    $self.t insert end-1c \
 		[list set [set slot(variable)]([set n2]) \
-		 [send $slot(target) [list set [set slot(variable)]([set n2])]]]
+		 [send $slot(target) [list ::set [set slot(variable)]([set n2])]]]
 	} elseif {[info exists n2]} {
 	    $self.t insert end-1c [list unset [set slot(variable)]([set n2])]
 	} else {
@@ -107,7 +107,7 @@ dialog variable_trace {
     method check_remote_send {} {
         # ensure that the current target has a valid send command
         # This is commonly not the case under Windows.
-        set cmd [send $slot(target) [list info commands ::send]]
+        set cmd [send $slot(target) [list ::info commands ::send]]
         set type [set ::[subst $slot(main)](target,type)]
 
         # If we called in using 'comm' then even if we do have a built
@@ -133,7 +133,7 @@ dialog variable_trace {
             switch -exact -- $type {
                 winsend {
                     set script {
-                        proc ::send {app args} {
+                        ::proc ::send {app args} {
                             eval winsend send [list $app] $args
                         }
                     }
@@ -141,7 +141,7 @@ dialog variable_trace {
                 }
                 dde {
                     set script {
-                        proc send {app args} {
+                        ::proc ::send {app args} {
                             eval dde eval [list $app] $args
                         }
                     }
@@ -190,13 +190,13 @@ widget globals_list {
             }
 	}
 	set result {}
-        set names [lsort [send $target [list array names $var]]]
+        set names [lsort [send $target [list ::array names $var]]]
         if {[llength $names] == 0} {
             append result "array set $var {}\n"
         } else {
             foreach elt $names {
                 append result [list set [set var]($elt) \
-                        [send $target [list set [set var]($elt)]]]
+                        [send $target [list ::set [set var]($elt)]]]
                 append result "\n"
             }
         }

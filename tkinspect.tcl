@@ -240,7 +240,7 @@ dialog tkinspect_main {
 	foreach cmdline $slot(cmdlines) {
 	    $cmdline set_target $target
 	}
-	set name [file tail [send $target set argv0]]
+	set name [file tail [send $target ::set argv0]]
 	$self status "Remote interpreter is \"$target\" ($name)"
 	wm title $self "$tkinspect(title): $target ($name)"
     }
@@ -306,7 +306,7 @@ dialog tkinspect_main {
 	    if [string match [comm::comm self] $interp] {
 		set label "$interp (self)"
 	    } else {
-		set label "$interp ([file tail [send $interp set argv0]])"
+		set label "$interp ([file tail [send $interp ::set argv0]])"
 	    }
 	    $m add command -label $label \
 		-command [list $self set_target $interp comm]

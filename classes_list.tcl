@@ -22,10 +22,10 @@ widget class_list {
     method update {target} {
         $self clear
         # Need info on older itcl version to do this properly.
-        set cmd [list if {[info command itcl_info] != {}} {itcl_info classes}]
+        set cmd [list if {[::info command itcl_info] != {}} {::itcl_info classes}]
         set classes [lsort [send $target $cmd]]
         if {$classes != {}} {
-            set slot(itcl_version) [send $target package provide Itcl]
+            set slot(itcl_version) [send $target ::package provide Itcl]
         }
         foreach class $classes {
             $self append $class
@@ -120,7 +120,7 @@ widget class_list {
     method retrieve_new {target class} {
         set res "itcl::class $class {\n"
         
-        set cmd [list namespace eval $class {info inherit}]
+        set cmd [list ::namespace eval $class {info inherit}]
         set inh [send $target $cmd]
         if {$inh != ""} {
             append res "    inherit $inh\n\n"
@@ -128,10 +128,10 @@ widget class_list {
             append res "\n"
         }
         
-        set vars [send $target namespace eval $class {info variable}]
+        set vars [send $target ::namespace eval $class {info variable}]
         foreach var $vars {
             set name [namespace tail $var]
-            set cmd [list namespace eval $class \
+            set cmd [list ::namespace eval $class \
                          [list info variable $name -protection -type -name -init]]
             set text [send $target $cmd]
             append res "    $text\n"
@@ -139,12 +139,12 @@ widget class_list {
         append res "\n"
         
         
-        set funcs [send $target [list namespace eval $class {info function}]]
+        set funcs [send $target [list ::namespace eval $class {info function}]]
         foreach func [lsort $funcs] {
             set qualclass "::[string trimleft $class :]"
             if {[string first $qualclass $func] == 0} {
                 set name [namespace tail $func]
-                set cmd [list namespace eval $class [list info function $name]]
+                set cmd [list ::namespace eval $class [list info function $name]]
                 set text [send $target $cmd]
                 
                 if {![string match "@itcl-builtin*" [lindex $text 4]]} {

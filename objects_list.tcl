@@ -21,10 +21,10 @@ widget object_list {
 
     method update {target} {
         $self clear
-        set cmd [list if {[info command itcl_info] != {}} {itcl_info objects}]
+        set cmd [list if {[::info command itcl_info] != {}} {itcl_info objects}]
         set objects [lsort [send $target $cmd]]
         if {$objects != {}} {
-            set slot(itcl_version) [send $target package provide Itcl]
+            set slot(itcl_version) [send $target ::package provide Itcl]
         }
         foreach object $objects {
             $self append $object

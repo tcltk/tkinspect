@@ -8,12 +8,12 @@ widget afters_list {
     method get_item_name {} { return after }
     method update {target} {
 	$self clear
-	foreach after [lsort [send $target after info]] {
+	foreach after [lsort [send $target ::after info]] {
 	    $self append $after
 	}
     }
     method retrieve {target after} {
-        set cmd [list after info $after]
+        set cmd [list ::after info $after]
         set retcode [catch [list send $target $cmd] msg]
         if {$retcode != 0} {
             set result "Error: $msg\n"

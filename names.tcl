@@ -13,7 +13,7 @@ namespace eval names {
     
     proc names {target {name ::}} {
         set result $name
-        foreach n [send $target namespace children $name] {
+        foreach n [send $target ::namespace children $name] {
             append result " " [names $target $n]
         }
         return $result
@@ -25,7 +25,7 @@ namespace eval names {
         }
         set result {}
         foreach n $names {
-            foreach p [send $target namespace eval $n ::info procs] {
+            foreach p [send $target ::namespace eval $n ::info procs] {
                 lappend result "$n\::$p"
             }
         }
@@ -39,13 +39,14 @@ namespace eval names {
         set defaultvar "__tkinspect:default_arg__"
         foreach arg $args {
             if [send $target [list ::info default $proc $arg $defaultvar]] {
-                lappend result [list $arg [send $target [list set $defaultvar]]]
+                lappend result [list $arg [send $target \
+                    [list ::set $defaultvar]]]
             } else {
                 lappend result $arg
             }
         }
         
-        send $target catch unset $defaultvar
+        send $target ::catch ::unset $defaultvar
         
         return [list proc [namespace tail $proc] $result {} ]
     }
@@ -65,10 +66,10 @@ namespace eval names {
 
     proc value {target var} {
         set tail [namespace tail $var]
-        if {[send $target [list array exists $var]]} {
+        if {[send $target [list ::array exists $var]]} {
             return "variable $tail ; # $var is an array\n" ; # dump it out?
         }
-        set cmd [list set $var]
+        set cmd [list ::set $var]
         set retcode [catch [list send $target $cmd] msg]
         if {$retcode != 0} {
             return "variable $tail ; # $var not defined\n"
@@ -78,7 +79,7 @@ namespace eval names {
     }
     
     proc exports {target namespace} {
-        set result [send $target namespace eval $namespace ::namespace export]
+        set result [send $target ::namespace eval $namespace ::namespace export]
         return [unqualify $result]
     }
 
