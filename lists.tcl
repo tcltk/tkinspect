@@ -159,8 +159,6 @@ widget tkinspect_list {
 	    -command "$self search_dialog"
 	$slot(menu) add command -label "Edit Filter..." -underline 0 \
 	    -command "$self edit_filter"
-	$slot(menu) add command -label "Remove List" -underline 0 \
-	    -command "$self remove"
     }
     method reconfig {} {
 	$self.title config -text "$slot(title):"
