@@ -6,7 +6,8 @@
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
 set tkinspect(release) 5alpha
-set tkinspect(release_date) "Feb 6, 1995"
+set tkinspect(release_date) "Feb 7, 1995"
+set tkinspect(list_classes) "procs_list globals_list windows_list"
 
 wm withdraw .
 
@@ -31,8 +32,11 @@ proc tkinspect_exit {} {
 
 proc tkinspect_widgets_init {} {
     global tkinspect_library
-    foreach file {lists.tcl about.tcl value.tcl} {
-	source $tkinspect_library/$file
+    foreach file {
+	lists.tcl procs_list.tcl globals_list.tcl windows_list.tcl
+	about.tcl value.tcl
+    } {
+	uplevel #0 source $tkinspect_library/$file
     }
 }
 
@@ -43,66 +47,43 @@ proc tkinspect_about {} {
 }
 
 dialog tkinspect_main {
-    member lists {}
+    param default_lists "procs_list globals_list windows_list"
+    param target ""
     member counter -1
-    member target
-    member window_info_type config
-    member last_list
-    member last_item
-    param filter_empty_window_configs 1
-    param get_window_info 1
-    param filter_window_class_config 1
-    param filter_window_pack_in 1
+    member get_window_info 1
+    member last_list {}
+    member list_counter -1
+    member lists ""
     method create {} {
-	global tkinspect_default
+	global tkinspect
 	$self config -highlightthickness 0 -bd 2
 	pack [frame $self.menu -bd 2 -relief raised] -side top -fill x
 	menubutton $self.menu.file -menu $self.menu.file.m -text "File" \
-	    -bd 0
+	    -underline 0
 	pack $self.menu.file -side left
 	set m [menu $self.menu.file.m]
 	$m add cascade -label "Select Interpreter" \
 	    -menu $self.menu.file.m.interps -command "$self fill_interp_menu"
-	$m add command -label "New Window" -command create_main_window
+	$m add command -label "New Window" \
+	    -command tkinspect_create_main_window
 	$m add command -label "Update Lists" -command "$self update_lists"
 	$m add separator
 	$m add command -label "Close Window" -command "$self close"
 	$m add command -label "Exit" -command tkinspect_exit
 	menu $self.menu.file.m.interps -tearoff 0
 	menubutton $self.menu.options -menu $self.menu.options.m \
-	    -text "Options" -bd 0
-	set m [menu $self.menu.options.m]
-	$m add radiobutton -variable [object_slotname window_info_type] \
-	    -value config -label "Window Configuration" -underline 7 \
-            -command "$self change_window_info_type"
-        $m add radiobutton -variable [object_slotname window_info_type] \
-	    -value packing -label "Window Packing" -underline 7 \
-            -command "$self change_window_info_type"
-        $m add radiobutton -variable [object_slotname window_info_type] \
-	    -value slavepacking -label "Slave Window Packing" -underline 1 \
-            -command "$self change_window_info_type"
-        $m add radiobutton -variable [object_slotname window_info_type] \
-	    -value bindings -label "Window Bindings" -underline 7 \
-            -command "$self change_window_info_type"
-        $m add radiobutton -variable [object_slotname window_info_type] \
-	    -value classbindings -label "Window Class Bindings" -underline 8 \
-            -command "$self change_window_info_type"
-        $m add separator
-        $m add checkbutton \
-	    -variable [object_slotname filter_empty_window_configs] \
-            -label "Filter Empty Window Options" -underline 0
-        $m add checkbutton \
-	    -variable [object_slotname filter_window_class_config] \
-            -label "Filter Window -class Options" -underline 0
-        $m add checkbutton \
-	    -variable [object_slotname filter_window_pack_in] \
-            -label "Filter Pack -in Options" -underline 0
-        $m add checkbutton \
-	    -variable [object_slotname get_window_info] \
-            -label "Get Window Information" -underline 0
+	    -text "Options" -underline 0
 	pack $self.menu.options -side left
+	set m [menu $self.menu.options.m]
+	foreach list_class $tkinspect(list_classes) {
+	    $m add command -label "New $list_class List" \
+		-command "$self add_list $list_class"
+	}
+	$m add separator
+	$m add checkbutton -variable [object_slotname get_window_info] \
+            -label "Get Window Information" -underline 0
 	menubutton $self.menu.help -menu $self.menu.help.m -text "Help" \
-	    -bd 0
+	    -underline 0
 	pack $self.menu.help -side right
 	set m [menu $self.menu.help.m]
 	$m add command -label "About..." -command tkinspect_about
@@ -115,23 +96,17 @@ dialog tkinspect_main {
 	button $f.send_value -text "Send Value" \
 	    -command "$self.value send_value"
 	pack $f.send_command $f.send_value -side left
-	pack [frame $self.lists -bd 0] -side top -fill both -expand 1
-	set slot(lists) ""
-	set i -1
-	foreach list_class $tkinspect_default(lists) {
-	    set list $self.lists.l[incr i]
-	    $list_class $list -command "$self list_item_click $list" \
-		-main $self
-	    lappend slot(lists) $list
-	    pack $list -side left -fill y -expand 1
-	}
+	pack [frame $self.lists -bd 0] -side top -fill both
 	value $self.value -main $self
 	pack $self.value -side top -fill both -expand 1
+	foreach list_class $slot(default_lists) {
+	    $self add_list $list_class
+	}
 	pack [frame $self.status] -side top -fill x
 	label $self.status.l -bd 2 -relief sunken -anchor w
 	pack $self.status.l -side left -fill x -expand 1
 	wm iconname $self "Tkinspect"
-	wm title $self "Tkinspect:"
+	wm title $self "Tkinspect: $slot(target)"
 	$self status "Ready."
     }
     method reconfig {} {
@@ -153,22 +128,11 @@ dialog tkinspect_main {
 	    $list update $slot(target)
 	}
     }
-    method change_window_info_type {} {
-	foreach list $slot(lists) {
-	    if {[$list cget -class] == "Windows_list"} {
-		$list set_mode $slot(window_info_type)
-		if {$slot(last_list) == $list} {
-		    $self list_item_click $list $slot(last_item)
-		}
-	    }
-	}
-    }
-    method list_item_click {list item} {
-	set slot(last_item) $item
+    method select_list_item {list item} {
 	set slot(last_list) $list
 	$self.value set_value "[$list get_item_name] $item" \
 	    [$list retrieve $slot(target) $item] \
-	    [list $self list_item_click $list $item]
+	    [list $self select_list_item $list $item]
 	$self.value set_send_filter [list $list send_filter]
 	$self status "Showing \"$item\""
     }
@@ -184,23 +148,64 @@ dialog tkinspect_main {
 	$self.status.l config -text $msg
     }
     method target {} {
+	if ![string length $slot(target)] {
+	    tkinspect_failure \
+	     "No interpreter has been selected yet.  Please select one first."
+	}
 	return $slot(target)
     }
+    method last_list {} { return $slot(last_list) }
     method send_command {cmd} {
 	set slot(last_list) ""
-	set slot(last_item) ""
 	set cmd [$self.buttons.command get]
 	$self.value set_value [list command $cmd] [send $slot(target) $cmd] \
 	    [list $self send_command $cmd]
 	$self.value set_send_filter ""
 	$self status "Command sent."
     }
+    method add_list {list_class} {
+	set list $self.lists.l[incr slot(list_counter)]
+	lappend slot(lists) $list
+	$list_class $list -command "$self select_list_item $list" \
+	    -main $self
+	pack $list -side left -fill y -expand 1
+    }
+    method add_menu {name} {
+	set w $self.menu.[string tolower $name]
+	menubutton $w -menu $w.m -text $name -underline 0
+	pack $w -side left
+	menu $w.m
+	return $w.m
+    }
+    method destroy_menu {name} {
+	set w $self.menu.[string tolower $name]
+	pack forget $w
+	destroy $w
+    }
 }
 
-proc create_main_window {} {
+proc tkinspect_create_main_window {args} {
     global tkinspect
-    tkinspect_main .main[incr tkinspect(counter)]
+    set w [eval tkinspect_main .main[incr tkinspect(counter)] $args]
     incr tkinspect(main_window_count)
+    return $w
+}
+
+source $tk_library/tkerror.tcl
+rename tkerror tk_tkerror
+proc tkinspect_failure {reason} {
+    global tkinspect
+    set tkinspect(error_is_failure) 1
+    error $reason
+}
+proc tkerror {message} {
+    global tkinspect
+    if [info exists tkinspect(error_is_failure)] {
+	unset tkinspect(error_is_failure)
+	tk_dialog .failure "Tkinspect Failure" $message warning 0 Ok
+    } else {
+	uplevel [list tk_tkerror $message]
+    }
 }
 
 widgets_init
@@ -209,4 +214,4 @@ tkinspect_default_options
 if [file exists ~/.tkinspect_opts] {
     source ~/.tkinspect_opts
 }
-create_main_window
+tkinspect_create_main_window
