@@ -5,7 +5,7 @@ This is the 5th release of my browser for Tk programs.  This version
 of tkinspect requires Tk 4.0 or better (tested only with Tk 4.0b4,
 and things will probably fail on previous betas).
 
-To install: type "wish -f install.tcl", fill out the form, and hit the
+To install: type "wish4.0 install.tcl", fill out the form, and hit the
 install button.
 
 Hopefully you can learn how to use tkinspect by selecting an
