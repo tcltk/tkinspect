@@ -241,10 +241,11 @@ proc tkhtml_set_tag {} {
 		[list tkhtml_href_click $tkhtml_priv(command) $href]
 	}
 	$tkhtml_priv(w) tag bind $href_tag <Enter> \
-	    [list $tkhtml_priv(w) tag configure $href_tag -foreground red]
+	    [list $tkhtml_priv(w) tag configure $href_tag \
+                 -foreground red]
 	$tkhtml_priv(w) tag bind $href_tag <Leave> \
 	    [list $tkhtml_priv(w) tag configure $href_tag \
-	     -foreground $tkhtml_priv(color)]
+                 -foreground $tkhtml_priv(color)]
     } else {
 	set tags $tag
     }

@@ -1,3 +1,8 @@
+Sun Jun 22 22:15:38 2003  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* tkinspect.tcl: Ensure the correct name is registered under X
+	Windows Tk so that traces work here too.
+
 Sat Jun 21 22:35:03 2003  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
 	* tkinspect.tcl: Merged in patch for paned views suppplied by

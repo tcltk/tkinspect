@@ -56,6 +56,11 @@ if {[info exists ::starkit::topdir]} {
     lappend auto_path [set tkinspect_library [file dirname [info script]]]
 }
 
+# If we have Tk send - use it (on windows this has no effect)
+if {[info command tk] != {}} {
+    ::tk appname $tkinspect(title)
+}
+
 # Use the winsend package if available.
 if {[info command send] == {}} {
     if {![catch {package require winsend}]} {
