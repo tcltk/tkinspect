@@ -34,10 +34,9 @@ widget value {
 	set m [$slot(main) add_menu Value]
 	$m add command -label "Send Value" -command "$self send_value"
 	$m add command -label "Find..." -command "$self search_dialog"
-	$m add command -label "Save Value..." -state disabled
-	$m add command -label "Load Value..." -state disabled
+	$m add command -label "Save Value..." -command "$self save"
+	$m add command -label "Load Value..." -command "$self load"
 	$m add command -label "Detach Window" -command "$self detach"
-
     }
     method reconfig {} {
 	$self.t config -width $slot(width) -height $slot(height)
@@ -116,6 +115,31 @@ widget value {
 	if [catch {$self.t see [$self.t index search.first]}] {
 	    $slot(main) status "Search text not found."
 	}
+    }
+    method save {} {
+	filechooser $self.fc -newfile 1 -title "Save Value"
+	set file [$self.fc run]
+	if ![string length $file] {
+	    $slot(main) status "Save cancelled."
+	    return
+	}
+	set fp [open $file w]
+	puts $fp [$self.t get 1.0 end]
+	close $fp
+	$slot(main) status "Value saved to \"$file\""
+    }
+    method load {} {
+	filechooser $self.fc -title "Load Value"
+	set file [$self.fc run]
+	if ![string length $file] {
+	    $slot(main) status "Load cancelled."
+	    return
+	}
+	$self.t delete 1.0 end
+	set fp [open $file r]
+	$self.t insert 1.0 [read $fp]
+	close $fp
+	$slot(main) status "Value read from \"$file\""
     }
 }
 
