@@ -87,7 +87,19 @@ set bindir \$prefix/bin
 install_dir .bindir -label "Bin dir:" -variable bindir
 set libdir \$prefix/lib/tkinspect
 install_dir .libdir -label "Library dir:" -variable libdir
-set wish /usr/local/bin/wish
+
+puts "Searching for wish4.0..."
+foreach dir [split $env(PATH) :] {
+    if [file executable $dir/wish4.0] {
+	set wish $dir/wish4.0
+	break
+    }
+}
+if ![info exists wish] {
+    set wish /usr/local/bin/wish4.0
+}
+puts "Using $wish"
+
 install_exec .wish -label "Wish executable:" -variable wish
 pack .prefix .bindir .libdir .wish -side top -fill x
 
