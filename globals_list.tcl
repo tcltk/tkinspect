@@ -126,15 +126,20 @@ widget globals_list {
 	}
     }
     method retrieve {target var} {
-	if ![send $target [list array size $var]] {
+	if ![send $target [list array exists $var]] {
 	    return [list set $var [send $target [list set $var]]]
 	}
 	set result {}
-	foreach elt [lsort [send $target [list array names $var]]] {
-	    append result [list set [set var]($elt) \
-			   [send $target [list set [set var]($elt)]]]
-	    append result "\n"
-	}
+        set names [lsort [send $target [list array names $var]]]
+        if {[llength $names] == 0} {
+            append result "array set $var {}\n"
+        } else {
+            foreach elt $names {
+                append result [list set [set var]($elt) \
+                        [send $target [list set [set var]($elt)]]]
+                append result "\n"
+            }
+        }
 	return $result
     }
     method send_filter {value} {

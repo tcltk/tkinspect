@@ -2,6 +2,8 @@ Thu Mar 21 15:27:53 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 
 	* tkinspect.tcl: Improved the dde send implementation and fixed
 	the window title to show the application name.
+	* globals_list.tcl: Bug #533164: Fixed the retrieve for empty
+	arrays.
 
 Thu Mar 21 00:32:17 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 
