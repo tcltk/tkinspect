@@ -50,6 +50,10 @@ widget windows_list {
 	    -variable [object_slotname get_window_info] \
             -label "Get Window Information" -underline 0
     }
+    method update_self {target} {
+	$slot(main) windows_info update $target
+	$self update $target
+    }
     method update {target} {
 	if !$slot(get_window_info) return
 	$self clear
