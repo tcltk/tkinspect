@@ -146,7 +146,7 @@ proc install {} {
     }
     if ![install_files $libdir {
 	about.tcl defaults.tcl lists.tcl globals_list.tcl procs_list.tcl
-	windows_list.tcl value.tcl stl.tcl sls.xbm tclIndex
+	windows_list.tcl value.tcl stl.tcl sls.xbm version.tcl tclIndex
     }] {
 	return
     }
