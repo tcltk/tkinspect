@@ -11,6 +11,9 @@ proc tkinspect_default_options {} {
     option add *Frame.highlightThickness 0
     option add *Frame.borderWidth 2
     option add *Menubutton.borderWidth 0
+    option add *Command_line.highlightThickness 0
+    option add *Command_line.borderWidth 2
+    option add *Tkinspect_main.highlightThickness 0
     option add *Procs_list.patterns {
 	^tk[A-Z].*
 	^auto_.*
