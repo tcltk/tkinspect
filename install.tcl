@@ -49,7 +49,7 @@ widget install_dir {
 	    if {$ans == 1} {
 		return 0
 	    }
-	    if [catch {exec mkdir $dir} msg] {
+	    if [catch {file mkdir $dir} msg] {
 		tk_dialog .error "Error Making Directory" "Couldn't make directory $dir: $msg" error 0 "Ok"
 		return 0
 	    }
@@ -83,11 +83,20 @@ text .instructions -relief ridge -bd 4 -width 20 -height 4 -wrap word \
 {Fill out the pathnames below and press the install button.  Any errors will appear in log window below.  If you wish to demo tkinspect w/o installing it, try "wish -f tkinspect.tcl".
 }
 pack .instructions -side top -fill both -expand 1
-set prefix /usr/local
-install_dir .prefix -label Prefix: -variable prefix
+
+switch -exact -- $tcl_platform(platform) {
+    unix { set prefix /usr/local }
+    windows -
+    macintosh { 
+        set prefix [eval file join [lrange \
+                [file split [info nameofexecutable]] 0 end-2]]
+    }
+}
 set bindir \$prefix/bin
-install_dir .bindir -label "Bin dir:" -variable bindir
 set libdir \$prefix/lib/tkinspect
+
+install_dir .prefix -label Prefix: -variable prefix
+install_dir .bindir -label "Bin dir:" -variable bindir
 install_dir .libdir -label "Library dir:" -variable libdir
 
 
@@ -112,32 +121,46 @@ proc log {msg} {
     update
 }
 
-foreach name {wish8.4 wish8.3 wish8.0 wish4.0 wish} {
-    log "Searching for $name..."
-    foreach dir [split $env(PATH) :] {
-	if [file executable $dir/$name] {
-	    set wish $dir/$name
-	    break
-	}
-    }
-    if ![info exists wish] {
-	log "not found!\n"
-	continue
-    }
-    break
-}
+set wish [info nameofexecutable]
+
+#foreach name {wish8.4 wish8.3 wish8.0 wish4.0 wish} {
+#    log "Searching for $name..."
+#    foreach dir [split $env(PATH) :] {
+#	if [file executable [file join $dir $name]] {
+#	    set wish [file join $dir $name]
+#	    break
+#	}
+#    }
+#    if ![info exists wish] {
+#	log "not found!\n"
+#	continue
+#    }
+#    break
+#}
 if [info exists wish] {
-    log "using $wish\n"    
+    log "using $wish\n"
 } else {
     set wish /usr/local/bin/wish8.3
-    log "Hmm, using $wish anways...\n"
+    log "Hmm, using $wish anyways...\n"
 }
 
 proc install_files {dir files} {
+    global tcl_platform
     foreach file $files {
 	log "Copying $file to $dir..."
-	if {[catch {exec rm -f $dir/[file tail $file]}] || [catch {exec cp $file $dir} error] || [catch {exec chmod 0444 $dir/[file tail $file]} error]} {
-	    log "whoops: $error, install aborted.\n"
+	if {[catch {
+            set dest [file join $dir [file tail $file]]
+            file copy -force $file $dest
+            switch -exact -- $tcl_platform(platform) {
+                unix { file attributes $dest -permissions 0444 }
+                windows -
+                macintosh { file attributes $dest -readonly 1 }
+                default { 
+                    error "platform $tcl_platform(platform) not recognised"
+                }
+            }
+        } errmsg]} {
+	    log "whoops: $errmsg, install aborted.\n"
 	    return 0
 	}
 	log "ok.\n"
@@ -152,7 +175,7 @@ proc regsub_quote {string} {
 }
 
 proc install {} {
-    global prefix libdir bindir wish
+    global prefix libdir bindir wish tcl_platform
     foreach w {.prefix .bindir .libdir .wish} {
 	log "Checking [$w cget -variable]..."
 	if ![$w verify] {
@@ -161,9 +184,9 @@ proc install {} {
 	}
 	log "ok.\n"
     }
-    if ![file isdirectory $libdir/stl-lite] {
+    if ![file isdirectory [file join $libdir stl-lite]] {
 	log "Making $libdir/stl-lite directory..."
-	if [catch {exec mkdir $libdir/stl-lite} error] {
+	if [catch {file mkdir [file join $libdir stl-lite]} error] {
 	    log "whoops: $error, install aborted.\n"
 	    return
 	}
@@ -173,7 +196,7 @@ proc install {} {
 	about.tcl defaults.tcl windows_info.tcl lists.tcl globals_list.tcl
 	procs_list.tcl windows_list.tcl images_list.tcl menus_list.tcl
 	canvas_list.tcl value.tcl stl.tcl sls.ppm version.tcl help.tcl
-	cmdline.tcl interface.tcl tclIndex
+	cmdline.tcl interface.tcl tclIndex ChangeLog
 	names.tcl classes_list.tcl objects_list.tcl
 	Intro.html Lists.html Procs.html Globals.html Windows.html
 	Images.html Canvases.html Menus.html Classes.html
@@ -190,16 +213,22 @@ proc install {} {
     }
     log "Making tkinspect shell script..."
     if [catch {
-	exec rm -f $bindir/tkinspect
+        set progname tkinspect
+        if {$tcl_platform(platform) == "windows"} {
+            append progname .tcl
+        }
+        file delete -force [file join $bindir $progname]
 	set fp [open tkinspect.tcl r]
 	set text [read $fp]
 	close $fp
 	regsub -all @tkinspect_library@ $text [regsub_quote $libdir] text
 	regsub -all @wish@ $text [regsub_quote $wish] text
-	set fp [open $bindir/tkinspect w]
+	set fp [open [file join $bindir $progname] w]
 	puts $fp $text
 	close $fp
-	exec chmod 0555 $bindir/tkinspect
+        if {$tcl_platform(platform) == "unix"} {
+            file attributes [file join $bindir $progname] -permissions 0555
+        }
     } error] {
 	log "whoops: $error, install aborted.\n"
 	return

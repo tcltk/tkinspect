@@ -1,3 +1,8 @@
+Sun Mar 24 23:50:29 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
+	
+	* Bug #533899: gracefully handle unavailable 'comm' package
+	* Bug #532905: fix the installer.
+
 Fri Mar 22 15:53:54 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 	
 	* names.tcl: Bug #533642: send ::info in case info is redefined.

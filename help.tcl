@@ -75,7 +75,7 @@ dialog help_window {
 	wm title $self "Help: $topic"
         set filename [file join $slot(helpdir) $topic]
         if {![file exist $filename]} {
-            append $filename .html
+            append filename .html
         }
 	set f [open $filename r]
 	set txt [read $f]

@@ -122,10 +122,12 @@ dialog tkinspect_main {
 	set m [menu $self.menu.file.m]
 	$m add cascade -label "Select Interpreter (send)" -underline 0 \
 	    -menu $self.menu.file.m.interps
-	$m add cascade -label "Select Interpreter (comm)" -underline 21 \
-	    -menu $self.menu.file.m.comminterps
-	$m add command -label "Connect to (comm)" -underline 0 \
-	    -command "$self connect_dialog"  
+        if {[package provide comm] != {}} {
+            $m add cascade -label "Select Interpreter (comm)" -underline 21 \
+                    -menu $self.menu.file.m.comminterps
+            $m add command -label "Connect to (comm)" -underline 0 \
+                    -command "$self connect_dialog"  
+        }
 	$m add command -label "Update Lists" -underline 0 \
 	    -command "$self update_lists"
 	$m add separator
@@ -145,8 +147,10 @@ dialog tkinspect_main {
 	    -command tkinspect_exit
 	menu $self.menu.file.m.interps -tearoff 0 \
 	    -postcommand "$self fill_interp_menu"
-	menu $self.menu.file.m.comminterps -tearoff 0 \
-	    -postcommand "$self fill_comminterp_menu"
+	if {[package provide comm] != {}} {
+            menu $self.menu.file.m.comminterps -tearoff 0 \
+                    -postcommand "$self fill_comminterp_menu"
+        }
 	menubutton $self.menu.help -menu $self.menu.help.m -text "Help" \
 	    -underline 0
 	pack $self.menu.help -side right
