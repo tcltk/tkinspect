@@ -23,7 +23,10 @@ widget windows_list {
 	    -value slavepacking -label "Slave Window Packing" -underline 1 \
             -command "$self mode_changed"
 	$slot(menu) add radiobutton -variable [object_slotname mode] \
-	    -value bindtags -label "Window Bindtags & Bindings" \
+	    -value bindtags -label "Window Bindtags" \
+	    -command "$self mode_changed"
+	$slot(menu) add radiobutton -variable [object_slotname mode] \
+	    -value bindtagsplus -label "Window Bindtags & Bindings" \
 	    -command "$self mode_changed"
         $slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value bindings -label "Window Bindings" -underline 7 \
@@ -114,6 +117,13 @@ widget windows_list {
 	return $result
     }
     method retrieve_bindtags {target window} {
+	set result "# bindtags of $window\n"
+	set tags [send $target [list bindtags $window]]
+	append result [list bindtags $window $tags]
+	append result "\n"
+	return $result
+    }
+    method retrieve_bindtagsplus {target window} {
 	set result "# bindtags of $window\n"
 	set tags [send $target [list bindtags $window]]
 	append result [list bindtags $window $tags]
