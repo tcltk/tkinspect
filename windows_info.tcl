@@ -9,7 +9,9 @@ object_class windows_info {
     member windows {}
     method clear {} {
 	foreach w $slot(windows) {
-	    unset slot($w.class)
+	    if [info exists slot($w.class)] {
+		unset slot($w.class)
+	    }
 	}
 	set slot(windows) {}
     }
