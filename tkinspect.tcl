@@ -232,7 +232,7 @@ dialog tkinspect_main {
     method fill_interp_menu {} {
 	set m $self.menu.file.m.interps
 	catch {$m delete 0 last}
-        if {[package present dde]} {
+        if {[package provide dde] != {}} {
             foreach service [dde services TclEval {}] {
                 $m add command -label [lindex $service 1] \
                     -command [list $self set_target [lindex $service 1]]
