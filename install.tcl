@@ -19,6 +19,7 @@ if ![file exists tclIndex] {
 set tkinspect_library .
 lappend auto_path .
 
+version_init
 stl_lite_init
 
 widget install_path {
@@ -69,9 +70,15 @@ widget install_exec {
     }
 }
 
+label .title -text "Tkinspect Installation" \
+    -font -adobe-helvetica-bold-r-*-*-*-180-*-*-*-*-*-*
+label .title2 -text "Release $tkinspect(release) ($tkinspect(release_date))" \
+    -font -*-helvetica-medium-r-*-*-12-*
+pack .title .title2 -side top
+
 text .instructions -relief ridge -bd 4 -width 20 -height 3 -wrap word
-.instructions insert 1.0 {\
-Fill out the pathnames below and press the install button.  Any errors will appear in log window below.
+.instructions insert 1.0 \
+{Fill out the pathnames below and press the install button.  Any errors will appear in log window below.
 }
 bind .instructions <FocusIn> {
     if {"%d" != "NotifyPointer"} { tk_focusContinue %W }
@@ -97,7 +104,7 @@ frame .buttons
 pack .buttons -side top
 button .install -text "Install" -command install
 button .cancel -text "Exit" -command "destroy ."
-pack .install .cancel -in .buttons -side left
+pack .install .cancel -in .buttons -side left -padx .1c
 
 wm title . "Tkinspect Installation"
 center_window .
