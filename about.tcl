@@ -21,7 +21,10 @@ dialog about {
                       http://sourceforge.net/projects/tkcon/ \n" \
 	    -font $slot(obliqueFont)
 	frame $self.mug -bd 4
-	label $self.mug.l -text "Originally by\nSam Shen <slshen@lbl.gov>"
+	label $self.mug.l -justify left \
+            -text "Originally by Sam Shen\n\Contributions\
+            from:\nPaul Healy\nJohn LoVerso\n\T. Schotanus\nPat Thoyts\n"
+
 	global about_priv
 	if ![info exists about_priv(mug_image)] {
 	    set about_priv(mug_image) \

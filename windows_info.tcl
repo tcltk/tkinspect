@@ -18,8 +18,8 @@ object_class windows_info {
     method get_windows {} { return $slot(windows) }
     method append_windows {target result_var parent} {
 	upvar $result_var result
-        set cmd "if {\[::info command winfo\] != {}} {\n\
-                winfo children $parent\n\
+        set cmd "if {\[::info command ::winfo\] != {}} {\n\
+                ::winfo children $parent\n\
             }"
 	foreach w [send $target $cmd] {
 	    lappend slot(windows) $w

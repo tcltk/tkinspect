@@ -42,7 +42,11 @@ if {[info commands itcl_info] != ""} {
 wm withdraw .
 
 # Find the tkinspect library - support scripted documents (Steve Landers)
-if {[info exists ::scripdoc::self]} {
+# also supports starkits (Pat Thoyts).
+if {[info exists ::starkit::topdir]} {
+    set tkinspect_library [file join $::starkit::topdir lib tkinspect]
+    lappend auto_path $tkinspect_library
+} elseif {[info exists ::scripdoc::self]} {
     lappend auto_path [file join $::scripdoc::self lib]
     set tkinspect_library [file join $::scripdoc::self lib tkinspect]
     lappend auto_path $tkinspect_library

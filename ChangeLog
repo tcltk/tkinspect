@@ -1,7 +1,10 @@
 Fri Jun 20 23:59:01 2003  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
-	* tkinspect.tcl (set_target): Fix for bug #757926 to fix traces.
-
+	* tkinspect.tcl: Fix for bug #757926 to fix traces.
+	* version.tcl: Set version to 5.1.6p10
+	* about.tcl: Added a list of contributors to the dialog.
+	* windows_info.tcl: Namespace qualify more sent commands.
+	
 Thu Mar 20 10:01:59 2003  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
 	* windows_list.tcl: Applied patch from bug #684608 by Achim Bursian
