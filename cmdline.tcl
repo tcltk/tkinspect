@@ -21,8 +21,8 @@ dialog command_line {
 	    -command "destroy $self"
 	text $self.t -yscroll "$self.sb set"
 	scrollbar $self.sb -command "$self.t yview"
-	pack $self.sb -side right -fill both
-	pack $self.t -side left
+	pack $self.sb -side right -fill y
+	pack $self.t -side left -fill both -expand 1
 
 	# Create a binding to forward commands to the target application,
 	# plus modify many of the built-in bindings so that only information
