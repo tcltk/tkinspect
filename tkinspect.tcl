@@ -7,7 +7,12 @@ exec @wish@ -f "$0" ${1+"$@"}
 
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
-set tkinspect(list_classes) "procs_list globals_list windows_list"
+set tkinspect(list_classes) {
+    "procs_list Procs"
+    "globals_list Globals"
+    "windows_list Windows"
+    "images_list Images"
+}
 set tkinspect(help_topics) {
     Intro Value Lists Procs Globals Windows Value Miscellany Notes
     WhatsNew ChangeLog
@@ -33,7 +38,7 @@ proc tkinspect_widgets_init {} {
     global tkinspect_library
     foreach file {
 	lists.tcl procs_list.tcl globals_list.tcl windows_list.tcl
-	about.tcl value.tcl help.tcl cmdline.tcl
+	images_list.tcl about.tcl value.tcl help.tcl cmdline.tcl
     } {
 	uplevel #0 source $tkinspect_library/$file
     }
@@ -69,9 +74,9 @@ dialog tkinspect_main {
 	$m add command -label "New Command Line" -underline 12 \
 	    -command "$self add_cmdline"
 	foreach list_class $tkinspect(list_classes) {
-	    $m add checkbutton -label "$list_class List" \
-		-variable [object_slotname ${list_class}_is_on] \
-		-command "$self toggle_list $list_class"
+	    $m add checkbutton -label "[lindex $list_class 1] List" \
+		-variable [object_slotname [lindex $list_class 0]_is_on] \
+		-command "$self toggle_list [lindex $list_class 0]"
 	}	
 	$m add separator
 	$m add command -label "Close Window" -underline 0 \
