@@ -9,7 +9,6 @@ widget windows_list {
     param filter_empty_window_configs 1
     param filter_window_class_config 1
     param filter_window_pack_in 1
-    param use_feedback 1
     member mode config
     method get_item_name {} { return window }
     method create {} {
@@ -50,37 +49,11 @@ widget windows_list {
 	$slot(menu) add checkbutton \
 	    -variable [object_slotname get_window_info] \
             -label "Get Window Information" -underline 0
-	$slot(menu) add checkbutton \
-	    -variable [object_slotname use_feedback] \
-	    -label "Use Feedback When Getting Windows"
-    }
-    method get_windows {target result_var parent} {
-	upvar $result_var result
-	foreach w [send $target winfo children $parent] {
-	    lappend result $w
-	    $self get_windows $target result $w
-	}
     }
     method update {target} {
 	if !$slot(get_window_info) return
 	$self clear
-	set windows [send $target winfo children .]
-	if $slot(use_feedback) {
-	    feedback .feedback -title "Getting Windows" \
-		-steps [llength $windows]
-	    .feedback grab
-	}
-	foreach w $windows {
-	    $self get_windows $target windows $w
-	    if $slot(use_feedback) {
-		.feedback step
-		update idletasks
-	    }
-	}
-	if $slot(use_feedback) {
-	    destroy .feedback
-	}
-	foreach w $windows {
+	foreach w [$slot(main) windows_info get_windows] {
 	    $self append $w
 	}
     }
