@@ -22,6 +22,9 @@ widget windows_list {
         $slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value slavepacking -label "Slave Window Packing" -underline 1 \
             -command "$self mode_changed"
+	$slot(menu) add radiobutton -variable [object_slotname mode] \
+	    -value bindtags -label "Window Bindtags & Bindings" \
+	    -command "$self mode_changed"
         $slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value bindings -label "Window Bindings" -underline 7 \
             -command "$self mode_changed"
@@ -60,29 +63,18 @@ widget windows_list {
     }
     method clear {} {
 	tkinspect_list:clear $self
-	if {$slot(mode) == "classbindings"} {
-	    $self.list insert 0 "all"
-	}
     }
     method mode_changed {} {
 	if {[$slot(main) last_list] == $self} {
 	    $slot(main) select_list_item $self $slot(current_item)
 	}
-	if {[$self.list get 0] == "all"} {
-	    $self.list delete 0
-	}
-	if {$slot(mode) == "classbindings"} {
-	    $self.list insert 0 "all"
-	}
     }
     method retrieve {target window} {
 	set result [$self retrieve_$slot(mode) $target $window]
-	if {$window != "all"} {
-	    set old_bg [send $target [list $window cget -background]]
-	    send $target [list $window config -background #ff69b4]
-	    send $target [list after 200 \
-		       [list catch [list $window config -background $old_bg]]]
-	}
+	set old_bg [send $target [list $window cget -background]]
+	send $target [list $window config -background #ff69b4]
+	send $target [list after 200 \
+		      [list catch [list $window config -background $old_bg]]]
 	return $result
     }
     method retrieve_config {target window} {
@@ -121,6 +113,20 @@ widget windows_list {
 	}
 	return $result
     }
+    method retrieve_bindtags {target window} {
+	set result "# bindtags of $window\n"
+	set tags [send $target [list bindtags $window]]
+	append result [list bindtags $window $tags]
+	append result "\n# bindings (in bindtag order)..."
+	foreach tag $tags {
+	    foreach sequence [send $target bind $tag] {
+		append result "\nbind $tag $sequence "
+		lappend result [send $target bind $tag $sequence]
+	    }
+	}
+	append result "\n"
+	return $result
+    }
     method retrieve_bindings {target window} {
 	set result "# bindings of $window"
 	foreach sequence [send $target bind $window] {
@@ -131,11 +137,7 @@ widget windows_list {
 	return $result
     }
     method retrieve_classbindings {target window} {
-	if {$window == "all"} {
-	    set class "all"
-	} else {
-	    set class [send $target winfo class $window]
-	}
+	set class [send $target winfo class $window]
 	set result "# class bindings for $window\n# class: $class"
 	foreach sequence [send $target bind $class] {
 	    append result "\nbind $class $sequence "
