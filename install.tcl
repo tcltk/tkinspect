@@ -1,4 +1,4 @@
-#!/usr/local/bin/wish
+#!/usr/local/bin/wish4.0
 #
 # $Id$
 #
@@ -88,17 +88,6 @@ install_dir .bindir -label "Bin dir:" -variable bindir
 set libdir \$prefix/lib/tkinspect
 install_dir .libdir -label "Library dir:" -variable libdir
 
-puts "Searching for wish4.0..."
-foreach dir [split $env(PATH) :] {
-    if [file executable $dir/wish4.0] {
-	set wish $dir/wish4.0
-	break
-    }
-}
-if ![info exists wish] {
-    set wish /usr/local/bin/wish4.0
-}
-puts "Using $wish"
 
 install_exec .wish -label "Wish executable:" -variable wish
 pack .prefix .bindir .libdir .wish -side top -fill x
@@ -108,7 +97,7 @@ pack .log -side top -fill both -expand 1
 
 frame .buttons
 pack .buttons -side top
-button .install -text "Install" -command install
+button .install -text "Install" -command do_install
 button .cancel -text "Exit" -command "destroy ."
 pack .install .cancel -in .buttons -side left -padx .1c
 
@@ -120,6 +109,19 @@ proc log {msg} {
     .log see end
     update
 }
+
+log "Searching for wish4.0..."
+foreach dir [split $env(PATH) :] {
+    if [file executable $dir/wish4.0] {
+	set wish $dir/wish4.0
+	break
+    }
+}
+if ![info exists wish] {
+    set wish /usr/local/bin/wish4.0
+}
+log "using $wish\n"
+
 
 proc install_files {dir files} {
     foreach file $files {
@@ -160,8 +162,8 @@ proc install {} {
     if ![install_files $libdir {
 	about.tcl defaults.tcl windows_info.tcl lists.tcl globals_list.tcl
 	procs_list.tcl windows_list.tcl images_list.tcl menus_list.tcl
-	value.tcl stl.tcl sls.ppm version.tcl help.tcl cmdline.tcl
-	interface.tcl tclIndex
+	canvas_list.tcl value.tcl stl.tcl sls.ppm version.tcl help.tcl
+	cmdline.tcl interface.tcl tclIndex
 	Intro.html Lists.html Procs.html Globals.html Windows.html
 	Value.html Miscellany.html Notes.html WhatsNew.html ChangeLog.html
     }] {
@@ -192,4 +194,16 @@ proc install {} {
     }
     log "ok.\n"
     log "Install finished.\n"
+}
+
+proc do_install {} {
+    toplevel .grab
+    wm withdraw .grab
+    while [catch {grab set .grab}] {}
+    set old_focus [focus -lastfor .grab]
+    focus .grab
+    install
+    grab release .grab
+    focus $old_focus
+    destroy .grab
 }
