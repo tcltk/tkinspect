@@ -68,6 +68,42 @@ dialog filter_editor {
     }
 }
 
+dialog list_search {
+    param list
+    param search_type exact
+    method create {} {
+	frame $self.top
+	pack $self.top -side top -fill x
+	label $self.l -text "Search for:"
+	entry $self.e -bd 2 -relief sunken
+	bind $self.e <Return> "$self search"
+	pack $self.l -in $self.top -side left
+	pack $self.e -in $self.top -fill x -expand 1
+	checkbutton $self.re -variable [object_slotname search_type] \
+	    -onvalue regexp -offvalue exact -text "Regexp search"
+	pack $self.re -side top -anchor w
+	button $self.go -text "Find Next" -command "$self search"
+	button $self.reset -text "Reset Search" -command "$self reset"
+	button $self.close -text "Close" -command "destroy $self"
+	pack $self.go $self.reset $self.close -side left
+	set title "Find in [$slot(list) get_item_name] List..."
+	wm title $self $title
+	wm iconname $self $title
+	focus $self.e
+	$slot(list) reset_search
+    }
+    method reconfig {} {
+    }
+    method reset {} {
+	$slot(list) reset_search 1
+    }
+    method search {} {
+	set text [$self.e get]
+	if ![string length $text] return
+	$slot(list) search $slot(search_type) $text
+    }
+}
+
 widget tkinspect_list {
     param command {}
     param title {}
@@ -79,6 +115,7 @@ widget tkinspect_list {
     member current_item
     member menu
     member contents {}
+    member search_index 0
     method create {} {
 	$self config -bd 2 -relief raised
 	pack [label $self.title -anchor w] -side top -fill x
@@ -89,10 +126,12 @@ widget tkinspect_list {
 	pack $self.sb -side right -fill y
 	pack $self.list -side right -fill both -expand yes
 	set slot(menu) [$slot(main) add_menu $slot(title)]
+	$slot(menu) add command -label "Find..." \
+	    -command "$self search_dialog"
 	$slot(menu) add command -label "Edit Filter..." \
 	    -command "$self edit_filter"
 	$slot(menu) add command -label "Remove List" \
-	    -command "$self remove" -state disabled
+	    -command "$self remove"
     }
     method reconfig {} {
 	$self.title config -text "$slot(title):"
@@ -133,12 +172,15 @@ widget tkinspect_list {
 	}
     }
     method click {x y} {
+	run_command [$self.list get @$x,$y]
+    }
+    method run_command {item} {
 	if [string length $slot(command)] {
-	    set slot(current_item) [$self.list get @$x,$y]
+	    set slot(current_item) $item
 	    if [string length $slot(current_item)] {
 		uplevel #0 [concat $slot(command) $slot(current_item)]
 	    }
-	}
+	}	
     }
     method remove {} {
 	$slot(main) destroy_menu $slot(title)
@@ -150,6 +192,43 @@ widget tkinspect_list {
 	} else {
 	    filter_editor $self.editor -list $self
 	    center_window $self.editor
+	}
+    }
+    method search_dialog {} {
+	if ![winfo exists $self.search] {
+	    list_search $self.search -list $self
+	    center_window $self.search
+	} else {
+	    wm deiconify $self.search
+	}
+    }
+    method reset_search {{set_see 0}} {
+	set slot(search_index) 0
+	if $set_see {
+	    $self.list see 0
+	}
+    }
+    method search {search_type text} {
+	foreach item [$self.list get $slot(search_index) end] {
+	    set found 0
+	    if {$search_type == "regexp" && [regexp $text $item]} {
+		set found 1
+	    } elseif {[string first $text $item] != -1} {
+		set found 1
+	    }
+	    if $found {
+		$self.list selection clear 0 end
+		$self.list selection set $slot(search_index)
+		$self.list see $slot(search_index)
+		incr slot(search_index)
+		$self run_command $item
+		break
+	    }
+	    incr slot(search_index)
+	}
+	if !$found {
+	    $slot(main) status "Didn't find \"$text\""
+	    $self reset_search
 	}
     }
 }
