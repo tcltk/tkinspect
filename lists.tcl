@@ -132,7 +132,7 @@ dialog list_show {
 widget tkinspect_list {
     param command {}
     param title {}
-    param width 30
+    param width 15
     param height 12
     param main
     param patterns {}
@@ -160,6 +160,8 @@ widget tkinspect_list {
 	    -command "$self search_dialog"
 	$slot(menu) add command -label "Edit Filter..." -underline 0 \
 	    -command "$self edit_filter"
+	$slot(menu) add command -label "Update This List" -underline 0 \
+	    -command "$self do_update_self"
     }
     method reconfig {} {
 	$self.title config -text "$slot(title):"
@@ -199,6 +201,12 @@ widget tkinspect_list {
 	    }
 	}
     }
+    # lists will have 2 methods, update and update_self.  update will
+    # be called when all the lists are updated.  update_self will be
+    # called when just this list is updated.  update_self defaults
+    # to being just update.
+    method update_self {target} { $self update $target }
+    method do_update_self {} { $self update_self [$slot(main) target] }
     method click {x y} {
 	$self run_command [$self.list get @$x,$y]
     }
