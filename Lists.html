@@ -1,0 +1,44 @@
+<html> <head>
+<title>Tkinspect Lists</title>
+<!-- $Id$ -->
+</head>
+
+<body>
+<center><h1>Lists</h1></center>
+
+The lists are the listboxes just below the <b>Command:</b> entry.
+By default, there are three lists:
+
+<ul>
+  <li> <a href=Procs.html>Procs</a> contains a list of all the Tcl
+       procedures in the target application.
+  <li> <a href=Globals.html>Globals</a> contains a list of the global
+       variables of the target application.
+  <li> <a href=Windows.html>Windows</a> contains a list of the windows
+       of the target application.
+</ul>
+
+Each list also has a menu in the menu bar.  The menu contains a set of
+standard operations, followed by list-specific operations (if any are
+available.)  The standard list operations are:
+
+<ul>
+  <li> <b>Show a X..</b> brings up a dialog that prompts for the name
+       of a proc, global, or window and places the its value in the <a
+       href=Value.html>value window</a>.
+  <li> <b>Find X...</b> brings up a dialog that searches the list.
+  <li> <b>Edit Filter...</b> brings up a dialog that allows editing of
+       the list filter.  The list will only displays those items that
+       either match or don't match a set of patterns.  (The default
+       list of patterns varies for each list type.)
+  <li> <b>Remove List</b> removes the list from the <b>tkinspect</b>
+       window.  The list can be added back again via the
+       <b>Options</b> menu.
+</ul>
+
+<hr>
+<address></address>
+<!-- hhmts start -->
+Last modified: Sun Jun  4 21:23:13 1995
+<!-- hhmts end -->
+</body> </html>
