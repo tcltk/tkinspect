@@ -63,7 +63,7 @@ dialog variable_trace {
 	}
 	if {$op == "w"} {
 	    $self.t insert end-1c \
-		[list set [set n1]([set n2]) \
+		[list set [set slot(variable)]([set n2]) \
 		 [send $slot(target) [list set [set slot(variable)]([set n2])]]]
 	} elseif {[info exists n2]} {
 	    $self.t insert end-1c [list unset [set slot(variable)]([set n2])]
@@ -76,7 +76,7 @@ dialog variable_trace {
     method scroll {} {
 	scan [$self.t index end] "%d.%d" line col
 	if {$line > $slot(savelines)} {
-	    $self.t delete 1.0 1.10000
+	    $self.t delete 1.0 2.0
 	}
 	$self.t see end
     }
