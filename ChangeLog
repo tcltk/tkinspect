@@ -1,3 +1,15 @@
+Thu Mar 21 00:32:17 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
+
+	* tkinspect.tcl: Fixed problem with application not closing
+	properly if not closed via the menu item.
+	* tkinspect.tcl: Added OK and Cancel buttons to improve the
+	handling of the comm connection dialog.
+
+Tue Mar 19 09:12:54 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
+
+	* tkinspect.tcl: Added a dde implementation of 'send' for use on
+	Windows.
+
 Thu Mar 14 12:09:24 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 	
 	* classes_list.tcl: Updated to support itcl 3.2 info syntax

@@ -1,6 +1,6 @@
 #!/bin/sh
 #\
-exec @wish@ "$0" ${1+"$@"}
+exec wish "$0" ${1+"$@"}
 #
 # $Id$
 #
@@ -40,6 +40,16 @@ if [file exists @tkinspect_library@/tclIndex] {
     lappend auto_path [set tkinspect_library @tkinspect_library@]
 } else {
     lappend auto_path [set tkinspect_library .]
+}
+
+# Emulate the 'send' command using the dde package if available.
+if {[info command send] == {}} {
+    if {![catch {package require dde}]} {
+        dde servername TkInspect-[pid]
+        proc send {app args} {
+            eval dde eval [list $app] $args
+        }
+    }
 }
 
 # Provide non-send based support using tklib's comm package.
@@ -168,12 +178,12 @@ dialog tkinspect_main {
     method reconfig {} {
     }
     method destroy {} {
+        global tkinspect
 	object_delete $slot(windows_info)
+        if {[incr tkinspect(main_window_count) -1] == 0} tkinspect_exit
     }
     method close {} {
-	global tkinspect
 	after 0 destroy $self
-	if {[incr tkinspect(main_window_count) -1] == 0} tkinspect_exit
     }
     method set_target {target} {
 	set slot(target) $target
@@ -213,10 +223,17 @@ dialog tkinspect_main {
     method fill_interp_menu {} {
 	set m $self.menu.file.m.interps
 	catch {$m delete 0 last}
-	foreach interp [winfo interps] {
-	    $m add command -label $interp \
-		-command [list $self set_target $interp]
-	}
+        if {[package present dde]} {
+            foreach service [dde services TclEval {}] {
+                $m add command -label [lindex $service 1] \
+                    -command [list $self set_target [lindex $service 1]]
+            }
+        } else {
+            foreach interp [winfo interps] {
+                $m add command -label $interp \
+                    -command [list $self set_target $interp]
+            }
+        }
     }
     method fill_comminterp_menu {} {
 	set m $self.menu.file.m.comminterps
@@ -354,10 +371,12 @@ dialog connect_interp {
 	label $self.l -text "Connect to:"
 	entry $self.e -bd 2 -relief sunken
 	bind $self.e <Return> "$self connect"
+	bind $self.e <Escape> "destroy $self"
 	pack $self.l -in $self.top -side left
 	pack $self.e -in $self.top -fill x -expand 1
-	button $self.close -text "Close" -command "destroy $self"
-	pack $self.close -side left
+	button $self.close -text "OK" -width 8 -command "$self connect"
+	button $self.cancel -text "Cancel" -width 8 -command "destroy $self"
+	pack $self.close $self.cancel -side left
 	wm title $self "Connect to Interp.."
 	wm iconname $self "Connect to Interp.."
 	focus $self.e

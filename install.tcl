@@ -1,6 +1,6 @@
 #!/bin/sh
 # \
-exec wish "$0" "$*"
+exec wish "$0" ${1+"$@"}
 #
 # $Id$
 #
@@ -176,8 +176,8 @@ proc install {} {
 	cmdline.tcl interface.tcl tclIndex
 	names.tcl classes_list.tcl objects_list.tcl
 	Intro.html Lists.html Procs.html Globals.html Windows.html
-	Images.html Canvases.html Menus.html
-	Value.html Miscellany.html Notes.html WhatsNew.html ChangeLog.html
+	Images.html Canvases.html Menus.html Classes.html
+	Value.html Miscellany.html Notes.html WhatsNew.html
     }] {
 	return
     }

@@ -9,7 +9,7 @@ proc value_no_filter {text} {
 }
 
 widget value {
-    param width 80
+    param width 100
     param height 20
     param main
     param savehist 15
