@@ -4,7 +4,7 @@
 
 dialog help_window {
     param topics {}
-    param width 50
+    param width 100
     param height 35
     param helpdir .
     member history {}

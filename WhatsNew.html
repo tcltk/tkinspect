@@ -1,66 +1,78 @@
-<html> <head>
-<title>What's New?</title>
-<!-- $Id$ -->
-</head>
+<!doctype HTML public "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+  <head>
+    <title>What's New?</title>
+    <!-- $Id$ -->
+  </head>
 
-<body>
-<center><h1>What's New?</h1></center>
+  <body>
+    <h1><center>What's New?</center></h1>
 
-See the <a href=ChangeLog.html>ChangeLog</a> for more details.
+    See the <a href="ChangeLog">ChangeLog</a> for more details.
+    
+    <h2>Changes in release 5.1.6p6 (14 Mar 2002)</h2>
+    
+    The original code plus some patches have been collected together and
+    added to the <a href="http://sourceforge.net/projects/tkcon">tkcon</a>
+    project as <a href="http://sourceforge.net/">SourceForge</a>. Some
+    general work has been done to bring tkinspect up to date for use with
+    Tcl 8.3 and 8.4 and incr Tcl 3.2.
+    
+    <h2>Changes in release 5.1.6 (23 June 1995)</h2>
+    
+    5.1.6 has only 2 bug fixes, see the 
+    <a href="ChangeLog">ChangeLog</a> if you're really interested.
+    
+    <h2>Changes in release 5.1.4 (21 June 1995)</h2>
+    
+    5.1.4 adds more browsing lists, and has a few refinements.
+    
+    <ul>
+      <li> Added 3 new lists: <a href="Images.html">images</a>,
+        <a href="Menus.html">menus</a>, and 
+        <a href="Canvases.html">canvases</a>.  The images
+        list was contributed by Gero Kohnert
+        <tt>&lt;gero@marvin.franken.de&gt;</tt>.
+      <li> Added <tt>button-3</tt> bindings on lists and value (brings
+        up menu.)
+      <li> Added <b>Update This List</b> menu item to lists.
+      <li> Cleaned up some things for Tk 4.0b4.
+      <li> Renamed the <a href="Miscellany.html">interface function</a>
+        <tt>tkinspect_value_text_window</tt> to
+        <tt>tkinspect_value_text_widget</tt> (now returns the Tk text
+        widget.)  Added <tt>tkinspect_display_image</tt>,
+        <tt>tkinspect_show_list</tt>, and <tt>tkinspect_remove_list</tt>.
+    </ul>
 
-<h2>Changes in release 5.1.6 (23 June 1995)</h2>
-
-5.1.6 has only 2 bug fixes, see the <a
-href=ChangeLog.html>ChangeLog</a> if you're really interested.
-
-<h2>Changes in release 5.1.4 (21 June 1995)</h2>
-
-5.1.4 adds more browsing lists, and has a few refinements.
-
-<ul>
-  <li> Added 3 new lists: <a href=Images.html>images</a>, <a
-       href=Menus.html>menus</a>, and <a
-       href=Canvases.html>canvases</a>.  The images
-       list was contributed by Gero Kohnert
-       <tt>&lt;gero@marvin.franken.de&gt;</tt>.
-  <li> Added <tt>button-3</tt> bindings on lists and value (brings
-       up menu.)
-  <li> Added <b>Update This List</b> menu item to lists.
-  <li> Cleaned up some things for Tk 4.0b4.
-  <li> Renamed the <a href=Miscellany.html>interface function</a>
-       <tt>tkinspect_value_text_window</tt> to
-       <tt>tkinspect_value_text_widget</tt> (now returns the Tk text
-       widget.)  Added <tt>tkinspect_display_image</tt>,
-       <tt>tkinspect_show_list</tt>, and <tt>tkinspect_remove_list</tt>.
-</ul>
-
-<h2>Changes in release 5.1 (5 June 1995)</h2>
-
-5.1 fills in the missing holes of 5.0, fixes a few bugs, and adds some
-features.
-
-<ul>
-  <li> Fixed the bug (?) that caused no interpreters to show up under
-       Tk 4.0b3.
-  <li> Added this HTML help system (renderer based on code from Angel Li
-       <tt>&lt;angel@flipper.rsmas.miami.edu&gt;</tt>.)
-  <li> Added the command line interface.
-  <li> Cleaned up the menus, added some keyboard bindings.
-  <li> <b>tkinspect</b> nows reads <tt>~/.tkinspect_opts</tt> and
-       <tt>.tkinspect_init</tt> (in the current directory.)
-  <li> There's an external interface available.  See <a
-       href=Miscellany>the miscellany help page</a>.
-
-</ul>
-
-
-<h2>Changes in release 5.0 (February 1995)</h2>
-
-Release 5.0 was a complete rewrite of previous versions of
-<b>tkinspect</b>.  This version runs only with Tk 4.0.
-
-<hr>
+    <h2>Changes in release 5.1 (5 June 1995)</h2>
+    
+    5.1 fills in the missing holes of 5.0, fixes a few bugs, and adds some
+    features.
+    
+    <ul>
+      <li> Fixed the bug (?) that caused no interpreters to show up under
+        Tk 4.0b3.
+      <li> Added this HTML help system (renderer based on code from Angel Li
+        <tt>&lt;angel@flipper.rsmas.miami.edu&gt;</tt>.)
+      <li> Added the command line interface.
+      <li> Cleaned up the menus, added some keyboard bindings.
+      <li> <b>tkinspect</b> nows reads <tt>~/.tkinspect_opts</tt> and
+        <tt>.tkinspect_init</tt> (in the current directory.)
+      <li> There's an external interface available.  See 
+        <a href="Miscellany">the miscellany help page</a>.
+        
+    </ul>
+    
+    
+    <h2>Changes in release 5.0 (February 1995)</h2>
+    
+    Release 5.0 was a complete rewrite of previous versions of
+    <b>tkinspect</b>.  This version runs only with Tk 4.0.
+    
+    <hr>
 <!-- hhmts start -->
-Last modified: Fri Jun 23 01:10:55 1995
+Last modified: Thu Mar 14 23:34:01 GMT 2002
 <!-- hhmts end -->
-</body> </html>
+
+  </body>
+</html>

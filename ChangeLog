@@ -1,4 +1,17 @@
-Fri Mar  1 23:37:21 2002  Pat Thoyts <Pat.Thoyts@bigfoot.com>
+Thu Mar 14 12:09:24 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
+	
+	* classes_list.tcl: Updated to support itcl 3.2 info syntax
+	* objects_list.tcl: Updated to support itcl 3.2 info syntax
+	* Classes.html: new page to describe the classes list window.
+	* tkinspect.tcl: fixed the About help menu item.
+	* version.tcl: incremented version to p6.
+
+Fri Mar  2 00:13:08 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
+	
+	* tkinspect: applied T. Schotanus incr Tcl support patch. This
+	provides itcl support for older (pre 3.x?) itcl versions.
+
+Fri Mar  1 23:37:21 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 	
 	* tkinspect: applied John LoVerso's 1996 comm patch to support
  	systems without the Tk send command.

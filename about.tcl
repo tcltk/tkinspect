@@ -7,7 +7,7 @@
 dialog about {
     param obliqueFont -*-helvetica-medium-o-*-*-12-* Font
     param font -*-helvetica-medium-r-*-*-12-* Font
-    param boldFont -*-helvetica-bold-r-*-*-18-* Font 
+    param boldFont -*-helvetica-bold-r-*-*-18-* Font
     method create {} {
 	global tkinspect tkinspect_library
 	wm withdraw $self
@@ -17,10 +17,11 @@ dialog about {
 	label $self.ver \
 	    -text "Release $tkinspect(release) ($tkinspect(release_date))" \
 	    -font $slot(font)
-	label $self.com -text "Send comments, suggestions, bugs to:" \
+	label $self.com -text "\nBugs, suggestions and patches to:\n\
+                      http://sourceforge.net/projects/tkcon/\n" \
 	    -font $slot(obliqueFont)
 	frame $self.mug -bd 4
-	label $self.mug.l -text "Sam Shen <slshen@lbl.gov>"
+	label $self.mug.l -text "Originally by\nSam Shen <slshen@lbl.gov>"
 	global about_priv
 	if ![info exists about_priv(mug_image)] {
 	    set about_priv(mug_image) \

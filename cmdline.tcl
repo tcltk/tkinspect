@@ -4,6 +4,7 @@
 # Provide a command line interface to an application (much of the
 # code is lifted out of the Tk demo rmt).
 #
+# [PT]: this should be replaced by tkcon...
 
 dialog command_line {
     param main
@@ -89,7 +90,8 @@ dialog command_line {
 	}
 	bind $self.t <Key> "command_line:text_insert $self %A; break"
 	$self.t tag configure bold \
-	    -font -*-Courier-Bold-R-Normal-*-120-*-*-*-*-*-*
+            -font {Courier 12 bold}
+        #-font -*-Courier-Bold-R-Normal-*-120-*-*-*-*-*-*
 	$self prompt
     }
     method destroy {} {

@@ -25,7 +25,7 @@ set tkinspect(list_class_files) {
 }
 set tkinspect(help_topics) {
     Intro Value Lists Procs Globals Windows Images Canvases Menus
-    Value Miscellany Notes WhatsNew ChangeLog
+    Classes Value Miscellany Notes WhatsNew ChangeLog
 }
 
 if {[info commands itcl_info] != ""} {
@@ -81,9 +81,10 @@ proc tkinspect_widgets_init {} {
     }
 }
 
-proc tkinspect_about {} {
+proc tkinspect_about {parent} {
     catch {destroy .about}
     about .about
+    wm transient .about $parent
     .about run
 }
 
@@ -132,7 +133,7 @@ dialog tkinspect_main {
 	    -underline 0
 	pack $self.menu.help -side right
 	set m [menu $self.menu.help.m]
-	$m add command -label "About..." -command tkinspect_about \
+	$m add command -label "About..." -command [list tkinspect_about $self]\
 	    -underline 0
 	foreach topic $tkinspect(help_topics) {
 	    $m add command -label $topic -command [list $self help $topic] \

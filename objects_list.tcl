@@ -5,8 +5,12 @@
 # E-mail:     sst@bouw.tno.nl
 # URL:        http://huizen.dds.nl/~quintess
 #
+# Itcl 3.2 support by Pat Thoyts <patthoyts@users.sourceforge.net>
+#   The original code is renamed to base_class_list and if a newer
+#   version of incr Tcl is found then we shall override some methods.
+#
 
-widget object_list {
+widget base_object_list {
 	object_include tkinspect_list
 	param title "Objects"
 
@@ -106,4 +110,84 @@ widget object_list {
 	method send_filter {value} {
 		return $value
 	}
+}
+
+# -------------------------------------------------------------------------
+# Handle new versions of incr Tcl
+# -------------------------------------------------------------------------
+
+if {[catch {package versions Itcl} itcl_version]} {
+    set itcl_version 0
+}
+
+if {$itcl_version < 3.2} {
+
+    # Older incr Tcl versions
+
+    widget object_list {
+        object_include tkinspect_list
+        object_include base_object_list
+    }
+
+} else {
+
+    # incr Tcl 3.2+
+
+    widget object_list {
+        object_include tkinspect_list
+        object_include base_object_list
+
+        method retrieve {target object} {
+            set class [send $target [list $object info class]]
+            set res "$class $object {\n"
+            
+            set cmd [list $object info inherit]
+            set inh [send $target $cmd]
+            if {$inh != ""} {
+                append res "    inherit $inh\n\n"
+            } else {
+                append res "\n"
+            }
+            
+            set vars [send $target $object info variable]
+            foreach var $vars {
+                set name [namespace tail $var]
+                set cmd [list $object info variable $name]
+                set text [send $target $cmd]
+                append res "    $text\n"
+            }
+            append res "\n"
+            
+            
+            set funcs [send $target [list $object info function]]
+            foreach func [lsort $funcs] {
+                set qualclass "::[string trimleft $class :]"
+                if {[string first $qualclass $func] == 0} {
+                    set name [namespace tail $func]
+                    set cmd [list $object info function $name]
+                    set text [send $target $cmd]
+
+                    if {![string match "@itcl-builtin*" [lindex $text 4]]} {
+                        switch -exact -- $name {
+                            constructor {
+                                append res "    $name [lrange $text 3 end]\n"
+                            }
+                            destructor {
+                                append res "    $name [lrange $text 4 end]\n"
+                            }
+                            default {
+                                append res "    [lindex $text 0] [lindex $text 1] $name\
+                                 [lrange $text 3 end]\n"
+                            }
+                        }
+                    }
+                }
+            }
+            
+            append res "}\n"
+            return $res
+        }
+
+    }
+
 }
