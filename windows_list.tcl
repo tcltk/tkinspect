@@ -24,10 +24,10 @@ widget windows_list {
             -command "$self mode_changed"
 	$slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value bindtags -label "Window Bindtags" \
-	    -command "$self mode_changed"
+	    -command "$self mode_changed" -underline 11
 	$slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value bindtagsplus -label "Window Bindtags & Bindings" \
-	    -command "$self mode_changed"
+	    -command "$self mode_changed" -underline 16
         $slot(menu) add radiobutton -variable [object_slotname mode] \
 	    -value bindings -label "Window Bindings" -underline 7 \
             -command "$self mode_changed"
@@ -37,13 +37,13 @@ widget windows_list {
         $slot(menu) add separator
         $slot(menu) add checkbutton \
 	    -variable [object_slotname filter_empty_window_configs] \
-            -label "Filter Empty Window Options" -underline 0
+            -label "Filter Empty Window Options"
         $slot(menu) add checkbutton \
 	    -variable [object_slotname filter_window_class_config] \
-            -label "Filter Window -class Options" -underline 0
+            -label "Filter Window -class Options"
         $slot(menu) add checkbutton \
 	    -variable [object_slotname filter_window_pack_in] \
-            -label "Filter Pack -in Options" -underline 0
+            -label "Filter Pack -in Options"
     }
     method get_windows {target result_var parent} {
 	upvar $result_var result

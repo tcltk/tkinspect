@@ -32,11 +32,16 @@ widget value {
 	bind $self.t <Control-x><Control-s> "$self send_value"
 	bind $self.t <Control-s> "$self search_dialog"
 	set m [$slot(main) add_menu Value]
-	$m add command -label "Send Value" -command "$self send_value"
-	$m add command -label "Find..." -command "$self search_dialog"
-	$m add command -label "Save Value..." -command "$self save"
-	$m add command -label "Load Value..." -command "$self load"
-	$m add command -label "Detach Window" -command "$self detach"
+	$m add command -label "Send Value" -command "$self send_value" \
+	    -underline 1
+	$m add command -label "Find..." -command "$self search_dialog" \
+	    -underline 0
+	$m add command -label "Save Value..." -command "$self save" \
+	    -underline 0
+	$m add command -label "Load Value..." -command "$self load" \
+	    -underline 0
+	$m add command -label "Detach Window" -command "$self detach" \
+	    -underline 0
     }
     method reconfig {} {
 	$self.t config -width $slot(width) -height $slot(height)
