@@ -30,7 +30,6 @@ widget install_path {
 	label $self.l
 	pack $self.e -side right
 	pack $self.l -side left
-	bind $self <FocusIn> { if {"%d" != "NotifyPointer"} { focus %W.e } }
     }
     method reconfig {} {
 	$self.l config -text $slot(label)
@@ -76,12 +75,10 @@ label .title2 -text "Release $tkinspect(release) ($tkinspect(release_date))" \
     -font -*-helvetica-medium-r-*-*-12-*
 pack .title .title2 -side top
 
-text .instructions -relief ridge -bd 4 -width 20 -height 3 -wrap word
+text .instructions -relief ridge -bd 4 -width 20 -height 3 -wrap word \
+    -takefocus 0
 .instructions insert 1.0 \
 {Fill out the pathnames below and press the install button.  Any errors will appear in log window below.
-}
-bind .instructions <FocusIn> {
-    if {"%d" != "NotifyPointer"} { tk_focusContinue %W }
 }
 pack .instructions -side top -fill both -expand 1
 set prefix /usr/local
@@ -94,11 +91,8 @@ set wish /usr/local/bin/wish
 install_exec .wish -label "Wish executable:" -variable wish
 pack .prefix .bindir .libdir .wish -side top -fill x
 
-text .log -width 70 -height 10 -bd 4 -relief ridge
+text .log -width 70 -height 10 -bd 4 -relief ridge -takefocus 0
 pack .log -side top -fill both -expand 1
-bind .log <FocusIn> {
-    if {"%d" != "NotifyPointer"} { tk_focusContinue %W }
-}
 
 frame .buttons
 pack .buttons -side top
