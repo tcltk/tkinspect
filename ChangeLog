@@ -1,3 +1,8 @@
+Fri Mar  1 23:37:21 2002  Pat Thoyts <Pat.Thoyts@bigfoot.com>
+	
+	* tkinspect: applied John LoVerso's 1996 comm patch to support
+ 	systems without the Tk send command.
+
 Sun Dec 14 19:46:05 1997  Paul Healy <ei9gl@indigo.ie>
 	
 	* tkinspect: describe patch procedure to get around diff/patch/RCS
@@ -7,7 +12,7 @@ Sun Nov 23 22:14:36 1997  Paul Healy <ei9gl@indigo.ie>
 	
 	* tkinspect: handle procedures and variables inside namespaces
 	
-Sun Oct 05 20:09:10 1997  Paul Healy <ei9gl@indigo.ie>
+Sun Oct  5 20:09:10 1997  Paul Healy <ei9gl@indigo.ie>
 
 	* tkinspect: handle the disappearance of the tkerror proc in tk8.0
 	Released p2.

@@ -28,6 +28,28 @@ if [file exists @tkinspect_library@/tclIndex] {
     lappend auto_path [set tkinspect_library .]
 }
 
+# Provide non-send based support using tklib's comm package.
+if {![catch {package require comm}]} {
+    # defer the cleanup for 2 seconds to allow other events to process
+    comm::comm hook lost {after 2000 set x 1; vwait x}
+
+    #
+    # replace send with version that does both send and comm
+    #
+    if [string match send [info command send]] {
+        rename send tk_send
+    } else {
+        proc tk_send args {}
+    }
+    proc send {app args} {
+        if [string match {[0-9]*} $app] {
+            eval comm::comm send [list $app] $args
+        } else {
+            eval tk_send [list $app] $args
+        }
+    }
+}
+
 stl_lite_init
 version_init
 
@@ -68,8 +90,12 @@ dialog tkinspect_main {
 	    -underline 0
 	pack $self.menu.file -side left
 	set m [menu $self.menu.file.m]
-	$m add cascade -label "Select Interpreter" -underline 0 \
+	$m add cascade -label "Select Interpreter (send)" -underline 0 \
 	    -menu $self.menu.file.m.interps
+	$m add cascade -label "Select Interpreter (comm)" -underline 21 \
+	    -menu $self.menu.file.m.comminterps
+	$m add command -label "Connect to (comm)" -underline 0 \
+	    -command "$self connect_dialog"  
 	$m add command -label "Update Lists" -underline 0 \
 	    -command "$self update_lists"
 	$m add separator
@@ -89,6 +115,8 @@ dialog tkinspect_main {
 	    -command tkinspect_exit
 	menu $self.menu.file.m.interps -tearoff 0 \
 	    -postcommand "$self fill_interp_menu"
+	menu $self.menu.file.m.comminterps -tearoff 0 \
+	    -postcommand "$self fill_comminterp_menu"
 	menubutton $self.menu.help -menu $self.menu.help.m -text "Help" \
 	    -underline 0
 	pack $self.menu.help -side right
@@ -141,8 +169,9 @@ dialog tkinspect_main {
 	foreach cmdline $slot(cmdlines) {
 	    $cmdline set_target $target
 	}
-	$self status "Remote interpreter is \"$target\""
-	wm title $self "Tkinspect: $target"
+	set name [file tail [send $target set argv0]]
+	$self status "Remote interpreter is \"$target\" ($name)"
+	wm title $self "Tkinspect: $target ($name)"
     }
     method update_lists {} {
 	if {$slot(target) == ""} return
@@ -160,11 +189,33 @@ dialog tkinspect_main {
 	$self.value set_send_filter [list $list send_filter]
 	$self status "Showing \"$item\""
     }
+    method connect_dialog {} {
+	if ![winfo exists $self.connect] {
+	    connect_interp $self.connect -value $self
+	    under_mouse $self.connect
+	} else {
+	    wm deiconify $self.connect
+	    under_mouse $self.connect
+	}
+    }
     method fill_interp_menu {} {
 	set m $self.menu.file.m.interps
 	catch {$m delete 0 last}
 	foreach interp [winfo interps] {
 	    $m add command -label $interp \
+		-command [list $self set_target $interp]
+	}
+    }
+    method fill_comminterp_menu {} {
+	set m $self.menu.file.m.comminterps
+	catch {$m delete 0 last}
+	foreach interp [comm::comm interps] {
+	    if [string match [comm::comm self] $interp] {
+		set label "$interp (self)"
+	    } else {
+		set label "$interp ([file tail [send $interp set argv0]])"
+	    }
+	    $m add command -label $label \
 		-command [list $self set_target $interp]
 	}
     }
@@ -281,4 +332,31 @@ if [file exists ~/.tkinspect_opts] {
 tkinspect_create_main_window
 if [file exists .tkinspect_init] {
     source .tkinspect_init
+}
+
+dialog connect_interp {
+    param value
+    method create {} {
+	frame $self.top
+	pack $self.top -side top -fill x
+	label $self.l -text "Connect to:"
+	entry $self.e -bd 2 -relief sunken
+	bind $self.e <Return> "$self connect"
+	pack $self.l -in $self.top -side left
+	pack $self.e -in $self.top -fill x -expand 1
+	button $self.close -text "Close" -command "destroy $self"
+	pack $self.close -side left
+	wm title $self "Connect to Interp.."
+	wm iconname $self "Connect to Interp.."
+	focus $self.e
+    }
+    method reconfig {} {
+    }
+    method connect {} {
+	set text [$self.e get]
+	if ![string match {[0-9]*} $text] return
+	comm::comm connect $text
+	wm withdraw $self
+	$slot(value) set_target $text
+    }
 }

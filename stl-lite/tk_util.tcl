@@ -32,3 +32,10 @@ proc center_window {win} {
     wm geometry $win +[expr {($sw-$w)/2}]+[expr {($sh-$h)/2}]
     wm deiconify $win
 }
+
+proc under_mouse {win} {
+    set xy [winfo pointerxy $win]
+    wm withdraw $win
+    wm geometry $win +[expr [lindex $xy 0] - 10]+[expr [lindex $xy 1] - 10]
+    wm deiconify $win
+}
