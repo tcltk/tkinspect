@@ -1,27 +1,28 @@
-			tkinspect, release 5.1.6
-			    (June 23, 1995)
+			tkinspect, release 5.1.6p7
+			    (22 Mar 2002)
 
-This is the 5th release of my browser for Tk programs.  This version
-of tkinspect requires Tk 4.0 or better (tested only with Tk 4.0b4,
-and things will probably fail on previous betas).
-
-To install: type "wish4.0 install.tcl", fill out the form, and hit the
-install button.
+Tkinspect is a Tk program browser originally written by Sam Shen and
+now updated to work with Tcl/Tk 8+, incr Tcl 3+ and to cope with
+systems such as MS Windows where the Tk 'send' command is not
+available. Based upon the 5.1.6 release of tkinspect this version
+contains numerous bug fixes and functionality patches. See the
+ChangeLog file for details.
 
 tkinspect should be pretty easy to use, hopefully you can learn how to
 use it by selecting an interpreter (via the File, Select Interpreter
 menu item) and then clicking on things.  There is also an online help
 system.
 
+tkinspect may either be run in-place (by wish tkinspect.tcl) or can be
+installed using the install program (wish install.tcl). Fill out the
+form, and hit the install button.
+
 tkinspect itself is public domain, you may do whatever you want with
 it.  However, tkinspect uses a hacked down library that I've written
 at LBL, so the files in stl-lite are copyright 1995 Lawrence Berkeley
-Lab.  See stl-lite/COPYRIGHT for the full copyright notice.  (STL will
-soon be renamed to SNTL to avoid conflicting with the C++ template
-library.)
+Lab.  See stl-lite/COPYRIGHT for the full copyright notice.
 
-Please send me any comments or suggestions you might have, along with
-any bugs that you may encounter.
-
-	-Sam Shen
-	SLShen@lbl.gov
+This release is maintained at SourceForge as a module of the tkcon
+project. See http://sourceforge.net/projects/tkcon for the project
+information and http://tkcon.sourceforge.net/tkinspect/ for the
+documentation.

@@ -1,3 +1,16 @@
+Mon Mar 25 12:05:22 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
+
+	* Bug #533899: Found and merged Paul Healy's 1997 p4 patch which adds
+	a 'namespaces' and an 'after' viewer. Comments from the patch:
+	  - fix the `Value:' history menu so that it respects changes to target
+	    interpreters. The `clear' method is broken?
+	  - snapshot afters so that you (nearly would) always to get to see the
+	    scripts associated with an after id at a particular time. Also make
+	    the afters menu more meaningful.
+	* classes_list.tcl:
+	* objects_list.tcl: Improved the incr Tcl support.
+	* README: modernised the README file.
+
 Sun Mar 24 23:50:29 2002  Pat Thoyts <patthoyts@users.sourceforge.net>
 	
 	* Bug #533899: gracefully handle unavailable 'comm' package

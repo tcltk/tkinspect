@@ -9,20 +9,22 @@ set tkinspect(title) "Tkinspect"
 set tkinspect(counter) -1
 set tkinspect(main_window_count) 0
 set tkinspect(list_classes) {
+    "namespaces_list Namespaces"
     "procs_list Procs"
     "globals_list Globals"
+    "class_list Classes"
+    "object_list Objects"
     "windows_list Windows"
     "images_list Images"
     "menus_list Menus"
     "canvas_list Canvases"
-    "class_list Classes"
-    "object_list Objects"
+    "afters_list Afters"
 }
 set tkinspect(list_class_files) {
     lists.tcl procs_list.tcl globals_list.tcl windows_list.tcl
     images_list.tcl about.tcl value.tcl help.tcl cmdline.tcl
     windows_info.tcl menus_list.tcl canvas_list.tcl classes_list.tcl
-    objects_list.tcl names.tcl
+    objects_list.tcl names.tcl afters_list.tcl namespaces_list.tcl
 }
 set tkinspect(help_topics) {
     Intro Value Lists Procs Globals Windows Images Canvases Menus
@@ -32,7 +34,7 @@ set tkinspect(help_topics) {
 if {[info commands itcl_info] != ""} {
 	set tkinspect(default_lists) "object_list procs_list globals_list windows_list"
 } else {
-	set tkinspect(default_lists) "procs_list globals_list windows_list"
+	set tkinspect(default_lists) "namespaces_list procs_list globals_list"
 }
 
 wm withdraw .

@@ -6,13 +6,14 @@
 # URL:        http://huizen.dds.nl/~quintess
 #
 # Itcl 3.2 support by Pat Thoyts <patthoyts@users.sourceforge.net>
-#   The original code is renamed to base_class_list and if a newer
-#   version of incr Tcl is found then we shall override some methods.
+#   We are hanging onto the older code to support old versions although
+#   this needs testing.
 #
 
-widget base_class_list {
+widget class_list {
     object_include tkinspect_list
     param title "Classes"
+    param itcl_version 0
     
     method get_item_name {} {
         return class
@@ -20,13 +21,28 @@ widget base_class_list {
     
     method update {target} {
         $self clear
-        set classes [lsort [send $target itcl_info classes]]
+        # Need info on older itcl version to do this properly.
+        set cmd [list if {[info command itcl_info] != {}} {itcl_info classes}]
+        set classes [lsort [send $target $cmd]]
+        if {$classes != {}} {
+            set slot(itcl_version) [send $target package provide Itcl]
+        }
         foreach class $classes {
             $self append $class
         }
     }
     
     method retrieve {target class} {
+        if {$slot(itcl_version) != {}} {
+            if {$slot(itcl_version) >= 3} {
+                return [$self retrieve_new $target $class]
+            } else {
+                return [$self retrieve_old $target $class]
+            }
+        }
+    }
+
+    method retrieve_old {target class} {
         set res "itcl_class $class {\n"
         
         set cmd [list $class :: info inherit]
@@ -101,86 +117,58 @@ widget base_class_list {
         return $res
     }
     
-    method send_filter {value} {
-        return $value
-    }
-}
-
-# -------------------------------------------------------------------------
-# Handle new versions of incr Tcl
-# -------------------------------------------------------------------------
-
-if {[catch {package versions Itcl} itcl_version]} {
-    set itcl_version 0
-}
-
-if {$itcl_version < 3.2} {
-
-    # Older incr Tcl versions
-
-    widget class_list {
-        object_include tkinspect_list
-        object_include base_class_list
-    }
-
-} else {
-
-    # incr Tcl 3.2+
-
-    widget class_list {
-        object_include tkinspect_list
-        object_include base_class_list
+    method retrieve_new {target class} {
+        set res "itcl::class $class {\n"
         
-        method retrieve {target class} {
-            set res "itcl::class $class {\n"
-            
-            set cmd [list namespace eval $class {info inherit}]
-            set inh [send $target $cmd]
-            if {$inh != ""} {
-                append res "    inherit $inh\n\n"
-            } else {
-                append res "\n"
-            }
-            
-            set vars [send $target namespace eval $class {info variable}]
-            foreach var $vars {
-                set name [namespace tail $var]
-                set cmd [list namespace eval $class \
-                             [list info variable $name -protection -type -name -init]]
-                set text [send $target $cmd]
-                append res "    $text\n"
-            }
+        set cmd [list namespace eval $class {info inherit}]
+        set inh [send $target $cmd]
+        if {$inh != ""} {
+            append res "    inherit $inh\n\n"
+        } else {
             append res "\n"
-            
-            
-            set funcs [send $target [list namespace eval $class {info function}]]
-            foreach func [lsort $funcs] {
-                set qualclass "::[string trimleft $class :]"
-                if {[string first $qualclass $func] == 0} {
-                    set name [namespace tail $func]
-                    set cmd [list namespace eval $class [list info function $name]]
-                    set text [send $target $cmd]
-
-                    if {![string match "@itcl-builtin*" [lindex $text 4]]} {
-                        switch -exact -- $name {
-                            constructor {
-                                append res "    $name [lrange $text 3 end]\n"
-                            }
-                            destructor {
-                                append res "    $name [lrange $text 4 end]\n"
-                            }
-                            default {
-                                append res "    [lindex $text 0] [lindex $text 1] $name\
+        }
+        
+        set vars [send $target namespace eval $class {info variable}]
+        foreach var $vars {
+            set name [namespace tail $var]
+            set cmd [list namespace eval $class \
+                         [list info variable $name -protection -type -name -init]]
+            set text [send $target $cmd]
+            append res "    $text\n"
+        }
+        append res "\n"
+        
+        
+        set funcs [send $target [list namespace eval $class {info function}]]
+        foreach func [lsort $funcs] {
+            set qualclass "::[string trimleft $class :]"
+            if {[string first $qualclass $func] == 0} {
+                set name [namespace tail $func]
+                set cmd [list namespace eval $class [list info function $name]]
+                set text [send $target $cmd]
+                
+                if {![string match "@itcl-builtin*" [lindex $text 4]]} {
+                    switch -exact -- $name {
+                        constructor {
+                            append res "    $name [lrange $text 3 end]\n"
+                        }
+                        destructor {
+                            append res "    $name [lrange $text 4 end]\n"
+                        }
+                        default {
+                            append res "    [lindex $text 0] [lindex $text 1] $name\
                                  [lrange $text 3 end]\n"
-                            }
                         }
                     }
                 }
             }
-            
-            append res "}\n"
-            return $res
         }
+        
+        append res "}\n"
+        return $res
     }
 
+    method send_filter {value} {
+        return $value
+    }
 }

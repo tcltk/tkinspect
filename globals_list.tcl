@@ -128,7 +128,14 @@ widget globals_list {
     }
     method retrieve {target var} {
 	if ![send $target [list array exists $var]] {
-	    return [list set $var [send $target [list set $var]]]
+	    #return [list set $var [send $target [list set $var]]]
+            set cmd [list set $var]
+            set retcode [catch [list send $target $cmd] msg]
+            if {$retcode != 0} {
+                return "Info: $var has not been defined\n      ($msg)\n"
+            } else {
+                return [list set $var $msg]
+            }
 	}
 	set result {}
         set names [lsort [send $target [list array names $var]]]

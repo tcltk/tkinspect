@@ -17,8 +17,8 @@ dialog about {
 	label $self.ver \
 	    -text "Release $tkinspect(release) ($tkinspect(release_date))" \
 	    -font $slot(font)
-	label $self.com -text "\nBugs, suggestions and patches to:\n\
-                      http://sourceforge.net/projects/tkcon/\n" \
+	label $self.com -text "\n Bugs, suggestions and patches to:\n\
+                      http://sourceforge.net/projects/tkcon/ \n" \
 	    -font $slot(obliqueFont)
 	frame $self.mug -bd 4
 	label $self.mug.l -text "Originally by\nSam Shen <slshen@lbl.gov>"
