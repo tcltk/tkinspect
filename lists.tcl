@@ -16,7 +16,7 @@ dialog filter_editor {
         pack $self.top -side top -fill x -pady .25c
         frame $self.buttons -bd 3
         button $self.ok -text "Apply" -command "$self apply"
-        button $self.close -text "Close" -command "wm withdraw $self"
+        button $self.close -text "Cancel" -command "wm withdraw $self"
         button $self.add -text "Add Pattern" \
 	    -command "$self add_pattern"
         button $self.del -text "Delete Pattern(s)" \
@@ -50,6 +50,7 @@ dialog filter_editor {
 	$slot(list) config -patterns $slot(patterns) \
 	    -filter_type $slot(filter_type)
 	$slot(list) update_needed
+	wm withdraw $self
     }
     method add_pattern {} {
 	set pat [$self.e get]
