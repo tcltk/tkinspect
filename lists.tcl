@@ -171,6 +171,7 @@ widget tkinspect_list {
     }
     method clear {} {
 	set slot(contents) ""
+	$self update_needed
     }
     method append {item} {
 	lappend slot(contents) $item
