@@ -28,8 +28,8 @@ widget install_path {
     param label
     param variable
     method create {} {
-	entry $self.e -width 60 -bd 2 -relief sunken
-	label $self.l
+	ttk::entry $self.e -width 60
+	ttk::label $self.l
 	pack $self.e -side right
 	pack $self.l -side left
     }
@@ -71,14 +71,14 @@ widget install_exec {
     }
 }
 
-label .title -text "Tkinspect Installation" \
+ttk::label .title -text "Tkinspect Installation" \
     -font -adobe-helvetica-bold-r-*-*-*-180-*-*-*-*-*-*
-label .title2 -text "Release $tkinspect(release) ($tkinspect(release_date))" \
+ttk::label .title2 -text "Release $tkinspect(release) ($tkinspect(release_date))" \
     -font -*-helvetica-medium-r-*-*-12-*
 pack .title .title2 -side top
 
-text .instructions -relief ridge -bd 4 -width 20 -height 4 -wrap word \
-    -takefocus 0
+text .instructions -width 20 -height 4 -wrap word \
+    -takefocus 0 -background white
 .instructions insert 1.0 \
 {Fill out the pathnames below and press the install button.  Any errors will appear in log window below.  If you wish to demo tkinspect w/o installing it, try "wish -f tkinspect.tcl".
 }
@@ -87,7 +87,7 @@ pack .instructions -side top -fill both -expand 1
 switch -exact -- $tcl_platform(platform) {
     unix { set prefix /usr/local }
     windows -
-    macintosh { 
+    macintosh {
         set prefix [eval file join [lrange \
                 [file split [info nameofexecutable]] 0 end-2]]
     }
@@ -103,13 +103,13 @@ install_dir .libdir -label "Library dir:" -variable libdir
 install_exec .wish -label "Wish executable:" -variable wish
 pack .prefix .bindir .libdir .wish -side top -fill x
 
-text .log -width 70 -height 10 -bd 4 -relief ridge -takefocus 0
+text .log -width 70 -height 10 -takefocus 0
 pack .log -side top -fill both -expand 1
 
-frame .buttons
+ttk::frame .buttons
 pack .buttons -side top
-button .install -text "Install" -command do_install
-button .cancel -text "Exit" -command "destroy ."
+ttk::button .install -text "Install" -command do_install
+ttk::button .cancel -text "Exit" -command "destroy ."
 pack .install .cancel -in .buttons -side left -padx .1c
 
 wm title . "Tkinspect Installation"
@@ -155,7 +155,7 @@ proc install_files {dir files} {
                 unix { file attributes $dest -permissions 0444 }
                 windows -
                 macintosh { file attributes $dest -readonly 1 }
-                default { 
+                default {
                     error "platform $tcl_platform(platform) not recognised"
                 }
             }
@@ -197,7 +197,7 @@ proc install {} {
 	procs_list.tcl windows_list.tcl images_list.tcl menus_list.tcl
 	canvas_list.tcl value.tcl stl.tcl sls.ppm version.tcl help.tcl
 	cmdline.tcl interface.tcl tclIndex ChangeLog
-	names.tcl classes_list.tcl objects_list.tcl 
+	names.tcl classes_list.tcl objects_list.tcl
         afters_list.tcl namespaces_list.tcl
 	Intro.html Lists.html Procs.html Globals.html Windows.html
 	Images.html Canvases.html Menus.html Classes.html

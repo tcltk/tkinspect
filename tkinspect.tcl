@@ -153,7 +153,7 @@ dialog tkinspect_main {
     member cmdlines ""
     member windows_info
     method create {} {
-        global tkinspect 
+        global tkinspect
 	pack [frame $self.menu -bd 2 -relief flat] -side top -fill x
 	menubutton $self.menu.file -menu $self.menu.file.m -text "File" \
 	    -underline 0
@@ -165,7 +165,7 @@ dialog tkinspect_main {
             $m add cascade -label "Select Interpreter (comm)" -underline 21 \
                     -menu $self.menu.file.m.comminterps
             $m add command -label "Connect to (comm)" -underline 0 \
-                    -command "$self connect_dialog"  
+                    -command "$self connect_dialog"
         }
 	$m add command -label "Update Lists" -underline 0 \
 	    -command "$self update_lists"
@@ -178,7 +178,7 @@ dialog tkinspect_main {
 	    $m add checkbutton -label "[lindex $list_class 1] List" \
 		-variable [object_slotname [lindex $list_class 0]_is_on] \
 		-command "$self toggle_list [lindex $list_class 0]"
-	}	
+	}
 	$m add separator
 	$m add command -label "Close Window" -underline 0 \
 	    -command "$self close"
@@ -207,33 +207,33 @@ dialog tkinspect_main {
             bind $w <Leave> {%W configure -relief flat -bd 1}
         }
 
-	pack [set f [frame $self.buttons -bd 0]] -side top -fill x
-	label $f.cmd_label -text "Command:"
+	pack [set f [ttk::frame $self.buttons]] -side top -fill x
+	ttk::label $f.cmd_label -text "Command:"
 	pack $f.cmd_label -side left
-	entry $f.command -bd 2 -relief sunken
+	ttk::entry $f.command
 	bind $f.command <Return> "$self send_command \[%W get\]"
 	pack $f.command -side left -fill x -expand 1
-	button $f.send_command -text "Send Command" \
+	ttk::button $f.send_command -text "Send Command" \
 	    -command "$self send_command \[$f.command get\]"
-	button $f.send_value -text "Send Value" \
+	ttk::button $f.send_value -text "Send Value" \
 	    -command "$self.value send_value"
 	pack $f.send_command $f.send_value -side left
 
         # change to use a panedwindow instead of a frame - Alex Caldwell
         if {[package vcompare [package provide Tk] 8.3] == 1} {
-            pack [panedwindow $self.lists -showhandle 1] -side top -fill both
-        } else { 
-            pack [frame $self.lists -bd 0] -side top -fill both
-        } 
-    
+            pack [ttk::panedwindow $self.lists -orient horizontal] -side top -fill both
+        } else {
+            pack [ttk::frame $self.lists] -side top -fill both
+        }
+
 	value $self.value -main $self
 	pack $self.value -side top -fill both -expand 1
 	foreach list_class $tkinspect(default_lists) {
 	    $self add_list $list_class
 	    set slot(${list_class}_is_on) 1
 	}
-	pack [frame $self.status] -side top -fill x
-	label $self.status.l -anchor w -bd 0 -relief sunken
+	pack [ttk::frame $self.status] -side top -fill x
+	ttk::label $self.status.l -anchor w
 	pack $self.status.l -side left -fill x -expand 1
 	set slot(windows_info) [object_new windows_info]
 	wm iconname $self $tkinspect(title)
@@ -374,7 +374,7 @@ dialog tkinspect_main {
 	    -main $self
         # change to use panedwindow widget instead of frame
         if {[package vcompare [package provide Tk] 8.3] == 1} {
-            $self.lists add $list -width 150
+            $self.lists add $list ;#-width 150
         } else {
             pack $list -side left -fill both -expand 1
         }
@@ -388,10 +388,10 @@ dialog tkinspect_main {
             $self.lists forget $list
         } else {
             pack forget $list
-        
+
             # for some reason if all the lists get unpacked the
             # .lists frame doesn't collapse unless we force it
-            $self.lists config -height 1
+            $self.lists configure ;# -height 1
         }
 	set list_class [lindex [split $list .] 3]
 	set slot(${list_class}_is_on) 0
@@ -448,7 +448,7 @@ proc tkinspect_create_main_window {args} {
 #
 # With tk8.0 the default tkerror proc is finally gone - bgerror
 # takes its place (see the changes tk8.0 changes file). This
-# simplified error handling should be ok. 
+# simplified error handling should be ok.
 #
 proc tkinspect_failure {reason} {
     tk_dialog .failure "Tkinspect Failure" $reason warning 0 Ok
@@ -467,16 +467,16 @@ if [file exists .tkinspect_init] {
 dialog connect_interp {
     param value
     method create {} {
-	frame $self.top
+	ttk::frame $self.top
 	pack $self.top -side top -fill x
-	label $self.l -text "Connect to:"
-	entry $self.e -bd 2 -relief sunken
+	ttk::label $self.l -text "Connect to:"
+	ttk::entry $self.e
 	bind $self.e <Return> "$self connect"
 	bind $self.e <Escape> "destroy $self"
 	pack $self.l -in $self.top -side left
 	pack $self.e -in $self.top -fill x -expand 1
-	button $self.close -text "OK" -width 8 -command "$self connect"
-	button $self.cancel -text "Cancel" -width 8 -command "destroy $self"
+	ttk::button $self.close -text "OK" -width 8 -command "$self connect"
+	ttk::button $self.cancel -text "Cancel" -width 8 -command "destroy $self"
 	pack $self.close $self.cancel -side left
 	wm title $self "Connect to Interp.."
 	wm iconname $self "Connect to Interp.."

@@ -2,7 +2,7 @@
 # $Id$
 #
 # This software is copyright (C) 1995 by the Lawrence Berkeley Laboratory.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that: (1) source code distributions
 # retain the above copyright notice and this paragraph in its entirety, (2)
@@ -15,7 +15,7 @@
 # the University nor the names of its contributors may be used to endorse
 # or promote products derived from this software without specific prior
 # written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED
 # WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -433,7 +433,7 @@ proc tkhtml_/header {level} {
     tkhtml_do p
 }
 
-tkhtml_define_entity pre { 
+tkhtml_define_entity pre {
     tkhtml_do tt
     tkhtml_do br
     incr tkhtml_priv(pre)
@@ -528,7 +528,7 @@ tkhtml_define_entity img {
 	if [info exists ar(align)] {
 	    set align [string tolower $ar(align)]
 	}
-	label $tkhtml_priv(w).$img -image $img
+	ttk::label $tkhtml_priv(w).$img -image $img
 	$tkhtml_priv(w) window create end -window $tkhtml_priv(w).$img \
 	    -align $align
     }

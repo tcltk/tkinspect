@@ -12,12 +12,12 @@ dialog help_window {
     member history_len 0
     member rendering 0
     method create {} {
-	frame $self.menu -relief raised -bd 2
-	menubutton $self.menu.topics -text "Topics" -underline 0 \
+	ttk::frame $self.menu
+	ttk::menubutton $self.menu.topics -text "Topics" -underline 0 \
 	    -menu $self.menu.topics.m
 	pack $self.menu.topics -in $self.menu -side left
 	set m [menu $self.menu.topics.m]
-	menubutton $self.menu.navigate -text "Navigate" -underline 0 \
+	ttk::menubutton $self.menu.navigate -text "Navigate" -underline 0 \
 	    -menu $self.menu.navigate.m
 	pack $self.menu.navigate -in $self.menu -side left
 	set m [menu $self.menu.navigate.m]
@@ -27,10 +27,10 @@ dialog help_window {
 	    -command "$self back" -accelerator b
 	$m add cascade -label "Go" -underline 0 -menu $m.go
 	menu $m.go -postcommand "$self fill_go_menu"
-	frame $self.text -bd 2 -relief raised
-	scrollbar $self.text.sb -command "$self.text.t yview"
-	text $self.text.t -relief sunken -bd 2 -yscroll "$self.text.sb set" \
-	    -wrap word -setgrid 1
+	ttk::frame $self.text
+	ttk::scrollbar $self.text.sb -command "$self.text.t yview"
+	text $self.text.t -yscrollcommand "$self.text.sb set" \
+	    -wrap word -setgrid 1 -background white
 	set t $self.text.t
 	pack $self.text.sb -in $self.text -side right -fill y
 	pack $self.text.t -in $self.text -side left -fill both -expand yes
@@ -81,7 +81,7 @@ dialog help_window {
 	set txt [read $f]
 	close $f
 
-        # Fix for 
+        # Fix for
         if [string match -nocase "*ChangeLog" $filename] {
             set txt "<html><body><pre>$txt</pre></body></html>"
         }

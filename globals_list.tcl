@@ -16,8 +16,8 @@ dialog variable_trace {
     member is_array 0
     member trace_cmd ""
     method create {} {
-	pack [frame $self.menu -bd 2 -relief raised] -side top -fill x
-	menubutton $self.menu.file -text "File" -underline 0 \
+	pack [ttk::frame $self.menu] -side top -fill x
+	ttk::menubutton $self.menu.file -text "File" -underline 0 \
 	    -menu $self.menu.file.m
 	pack $self.menu.file -side left
 	set m [menu $self.menu.file.m]
@@ -26,7 +26,7 @@ dialog variable_trace {
 	$m add separator
 	$m add command -label "Close Window" -command "destroy $self" \
 	    -underline 0
-	scrollbar $self.sb -relief sunken -bd 1 -command "$self.t yview"
+	ttk::scrollbar $self.sb -command "$self.t yview"
 	text $self.t -yscroll "$self.sb set" -setgrid 1
 	pack $self.sb -side right -fill y
 	pack $self.t -side right -fill both -expand 1

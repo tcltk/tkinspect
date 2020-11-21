@@ -18,15 +18,14 @@ widget value {
     member hist_no 0
     member send_filter value_no_filter
     method create {} {
-	$self config -bd 0 -relief flat -highlightthickness 0
-	pack [frame $self.title] -side top -fill x
-	pack [label $self.title.l -text "Value:  "] -side left
-	menubutton $self.title.vname -anchor w -menu $self.title.vname.m \
-	    -bd 0 -state disabled
+	#$self config -bd 0 -relief flat -highlightthickness 0
+	pack [ttk::frame $self.title] -side top -fill x
+	pack [ttk::label $self.title.l -text "Value:  "] -side left
+	ttk::menubutton $self.title.vname -menu $self.title.vname.m -state disabled
 	menu $self.title.vname.m -postcommand "$self fill_vname_menu"
 	pack $self.title.vname -fill x
-	scrollbar $self.sb -relief sunken -bd 1 -command "$self.t yview"
-	text $self.t -yscroll "$self.sb set"
+	ttk::scrollbar $self.sb -command "$self.t yview"
+	text $self.t -yscroll "$self.sb set" -background white
 	pack $self.sb -side right -fill y
 	pack $self.t -side right -fill both -expand 1
 	bind $self.t <Control-x><Control-s> "$self send_value"
@@ -155,18 +154,18 @@ dialog value_search {
     param value
     member search_type exact
     method create {} {
-	frame $self.top
+	ttk::frame $self.top
 	pack $self.top -side top -fill x
-	label $self.l -text "Search for:"
-	entry $self.e -bd 2 -relief sunken
+	ttk::label $self.l -text "Search for:"
+	ttk::entry $self.e
 	bind $self.e <Return> "$self search"
 	pack $self.l -in $self.top -side left
 	pack $self.e -in $self.top -fill x -expand 1
-	checkbutton $self.re -variable [object_slotname search_type] \
+	ttk::checkbutton $self.re -variable [object_slotname search_type] \
 	    -onvalue regexp -offvalue exact -text "Regexp search"
 	pack $self.re -side top -anchor w
-	button $self.go -text "Highlight" -command "$self search"
-	button $self.close -text "Close" -command "destroy $self"
+	ttk::button $self.go -text "Highlight" -command "$self search"
+	ttk::button $self.close -text "Close" -command "destroy $self"
 	pack $self.go $self.close -side left
 	wm title $self "Find in Value.."
 	wm iconname $self "Find in Value.."

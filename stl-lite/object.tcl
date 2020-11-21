@@ -2,7 +2,7 @@
 # $Id$
 #
 # This software is copyright (C) 1994 by the Lawrence Berkeley Laboratory.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that: (1) source code distributions
 # retain the above copyright notice and this paragraph in its entirety, (2)
@@ -15,7 +15,7 @@
 # the University nor the names of its contributors may be used to endorse
 # or promote products derived from this software without specific prior
 # written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED
 # WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -144,6 +144,11 @@ proc object_define_creator {windowType name spec} {
 	proc %s:frame {self args} \
 	    "uplevel \[concat object_window_of$window \$args]"
 	uplevel [concat $window config $args]
+        if {[winfo toplevel $window] eq $window} {
+            ttk::frame $window.pave
+            place $window.pave -x 0 -y 0 -relwidth 1.0 -relheight 1.0
+            lower $window.pave
+        }
 	$window create
 	set object(__created) 1
 	bind $window <Destroy> \
@@ -156,7 +161,7 @@ proc object_define_creator {windowType name spec} {
 }
 
 proc widget {name spec} {
-    object_define_creator frame $name $spec
+    object_define_creator ttk::frame $name $spec
 }
 
 proc dialog {name spec} {

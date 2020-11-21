@@ -10,6 +10,7 @@ proc tkinspect_default_options {} {
     option add *Label*borderWidth 0
     option add *Frame.highlightThickness 0
     option add *Frame.borderWidth 2
+    option add *tearOff: 0
     option add *Menubutton.borderWidth 0
     option add *Command_line.highlightThickness 0
     option add *Command_line.borderWidth 2

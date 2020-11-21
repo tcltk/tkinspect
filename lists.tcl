@@ -7,38 +7,38 @@ dialog filter_editor {
     member patterns
     member filter_type exclude
     method create {} {
-        frame $self.top
-        label $self.l -text "Pattern:"
-        entry $self.e -width 40 -relief sunken
-	bind $self.e <Return> "$self add_pattern"
+        ttk::frame $self.top
+        ttk::label $self.l -text "Pattern:"
+        ttk::entry $self.e -width 40
+        bind $self.e <Return> "$self add_pattern"
         pack $self.l -in $self.top -side left
         pack $self.e -in $self.top -side left -fill x
         pack $self.top -side top -fill x -pady .25c
-        frame $self.buttons -bd 3
-        button $self.ok -text "Apply" -command "$self apply"
-        button $self.close -text "Cancel" -command "wm withdraw $self"
-        button $self.add -text "Add Pattern" \
-	    -command "$self add_pattern"
-        button $self.del -text "Delete Pattern(s)" \
-	    -command "$self delete_patterns"
-        radiobutton $self.inc -variable [object_slotname filter_type] \
-	    -value include -relief flat -text "Include Patterns"
-        radiobutton $self.exc -variable [object_slotname filter_type] \
-	    -value exclude -relief flat -text "Exclude Patterns"
+        ttk::frame $self.buttons
+        ttk::button $self.ok -text "Apply" -command "$self apply"
+        ttk::button $self.close -text "Cancel" -command "wm withdraw $self"
+        ttk::button $self.add -text "Add Pattern" \
+            -command "$self add_pattern"
+        ttk::button $self.del -text "Delete Pattern(s)" \
+            -command "$self delete_patterns"
+        ttk::radiobutton $self.inc -variable [object_slotname filter_type] \
+            -value include -text "Include Patterns"
+        ttk::radiobutton $self.exc -variable [object_slotname filter_type] \
+            -value exclude -text "Exclude Patterns"
         pack $self.inc $self.exc $self.add $self.del -in $self.buttons \
-	    -side top -fill x -pady .1c -anchor w
+            -side top -fill x -pady .1c -anchor w
         pack $self.close $self.ok -in $self.buttons \
-	    -side bottom -fill x -pady .1c
+            -side bottom -fill x -pady .1c
         pack $self.buttons -in $self -side left -fill y
-        frame $self.lframe
-        scrollbar $self.sb -command "$self.list yview"
+        ttk::frame $self.lframe
+        ttk::scrollbar $self.sb -command "$self.list yview"
         listbox $self.list -yscroll "$self.sb set" -relief raised \
-            -width 40 -height 10 -selectmode multiple
+            -width 40 -height 10 -selectmode multiple -background white
         pack $self.sb -in $self.lframe -side right -fill y
         pack $self.list -in $self.lframe -side right -fill both -expand yes
         pack $self.lframe -in $self -side right -fill both -expand yes
-	set title "Edit [$slot(list) cget -title] Filter"
-	wm title $self $title
+        set title "Edit [$slot(list) cget -title] Filter"
+        wm title $self $title
 	foreach pat [$slot(list) cget -patterns] {
 	    $self.list insert end $pat
 	    lappend slot(patterns) $pat
@@ -73,19 +73,19 @@ dialog list_search {
     param list
     param search_type exact
     method create {} {
-	frame $self.top
+	ttk::frame $self.top
 	pack $self.top -side top -fill x
-	label $self.l -text "Search for:"
-	entry $self.e -bd 2 -relief sunken
+	ttk::label $self.l -text "Search for:"
+	ttk::entry $self.e
 	bind $self.e <Return> "$self search"
 	pack $self.l -in $self.top -side left
 	pack $self.e -in $self.top -fill x -expand 1
-	checkbutton $self.re -variable [object_slotname search_type] \
+	ttk::checkbutton $self.re -variable [object_slotname search_type] \
 	    -onvalue regexp -offvalue exact -text "Regexp search"
 	pack $self.re -side top -anchor w
-	button $self.go -text "Find Next" -command "$self search"
-	button $self.reset -text "Reset Search" -command "$self reset"
-	button $self.close -text "Close" -command "destroy $self"
+	ttk::button $self.go -text "Find Next" -command "$self search"
+	ttk::button $self.reset -text "Reset Search" -command "$self reset"
+	ttk::button $self.close -text "Close" -command "destroy $self"
 	pack $self.go $self.reset $self.close -side left
 	set title "Find in [$slot(list) get_item_name] List..."
 	wm title $self $title
@@ -107,15 +107,15 @@ dialog list_search {
 dialog list_show {
     param list
     method create {} {
-	frame $self.top
+	ttk::frame $self.top
 	pack $self.top -side top -fill x
-	label $self.l -text "Show:"
-	entry $self.e -bd 2 -relief sunken
+	ttk::label $self.l -text "Show:"
+	ttk::entry $self.e
 	bind $self.e <Return> "$self show"
 	pack $self.l -in $self.top -side left
 	pack $self.e -in $self.top -fill x -expand 1
-	button $self.show -text "Show" -command "$self show"
-	button $self.close -text "Close" -command "destroy $self"
+	ttk::button $self.show -text "Show" -command "$self show"
+	ttk::button $self.close -text "Close" -command "destroy $self"
 	pack $self.show $self.close -side left
 	wm title $self "Show a [$slot(list) get_item_name]"
 	focus $self.e
@@ -142,15 +142,15 @@ widget tkinspect_list {
     member contents {}
     member search_index 0
     method create {} {
-        $self config -bd 0 -relief raised
-        pack [label $self.title -anchor w] -side top -fill x
-        frame $self.frame  
+        $self configure -borderwidth 0 -relief raised
+        pack [ttk::label $self.title -anchor w] -side top -fill x
+        ttk::frame $self.frame
         pack $self.frame -side top -fill x
-        scrollbar $self.sb -command "$self.list yview" -relief sunken -bd 1
-        scrollbar $self.sb2 -command "$self.list xview" -relief sunken -bd 1 -orient horizontal
-        listbox $self.list -bd 2 -relief groove -exportselection 0 \
+        ttk::scrollbar $self.sb -command "$self.list yview"
+        ttk::scrollbar $self.sb2 -command "$self.list xview" -orient horizontal
+        listbox $self.list -borderwidth 1 -relief groove -exportselection 0 \
             -yscroll "$self.sb set" -selectmode single \
-            -xscroll "$self.sb2 set"
+            -xscroll "$self.sb2 set" -background white
         bind $self.list <1> "$self click %x %y; continue"
         bind $self.list <Key-space> "$self trigger; continue"
         pack $self.sb -in $self.frame -side right -fill y
@@ -186,7 +186,7 @@ widget tkinspect_list {
 	if ![info exists slot(update_pending)] {
 	    set slot(update_pending) 1
 	    after idle "if \[winfo exists $self\] \"$self do_update\""
-	}	
+	}
     }
     method do_update {} {
 	unset slot(update_pending)
@@ -229,7 +229,7 @@ widget tkinspect_list {
 	    if [string length $slot(current_item)] {
 		uplevel #0 [concat $slot(command) [list $slot(current_item)]]
 	    }
-	}	
+	}
     }
     method remove {} {
 	$slot(main) delete_menu $slot(title)

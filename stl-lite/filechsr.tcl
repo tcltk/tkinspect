@@ -49,10 +49,10 @@ dialog filechooser {
     method create {} {
 	set w $self
 	wm minsize $w 100 100
-	frame $w.list
+	ttk::frame $w.list
 	pack $w.list -in $w -side top -fill both -expand yes
-	scrollbar $w.list.sb -command "$w.list.l yview"
-	listbox $w.list.l -yscroll "$w.list.sb set" -relief raised -bd 2 \
+	ttk::scrollbar $w.list.sb -command "$w.list.l yview"
+	listbox $w.list.l -yscroll "$w.list.sb set" \
 	    -exportselection false -selectmode single
 	pack $w.list.sb -in $w.list -side right -fill y
 	pack $w.list.l -in $w.list -side left -fill both -expand 1
@@ -64,8 +64,8 @@ dialog filechooser {
 	}
 	set b [frame $w.bottom -bd 3 -relief ridge]
 	pack $b -side top -fill both -pady 3 -padx 3
-	label $b.status1 -anchor w
-	label $b.status2 -anchor w
+	ttk::label $b.status1 -anchor w
+	ttk::label $b.status2 -anchor w
 	pack $b.status1 $b.status2 -side top -fill x -padx 2
 	simpleentry $b.filter -width 30 -label "Filter:"
 	$b.filter bind <Return> "$self filter \[$b.filter entry get\]"
@@ -74,9 +74,9 @@ dialog filechooser {
 	simpleentry $b.file -width 30 -label "File:"
 	$b.file bind <Return> "$self open 1 \[$b.file entry get\]"
 	pack $b.file -side top -fill x -pady 3 -padx 5
-	button $b.up -command "cd ..; $self fill" -text "Up"
-	button $b.open -command "$self open 0" -text "Open"
-	button $b.cancel -command "object_delete $w" -text "Cancel"
+	ttk::button $b.up -command "cd ..; $self fill" -text "Up"
+	ttk:button $b.open -command "$self open 0" -text "Open"
+	ttk::button $b.cancel -command "object_delete $w" -text "Cancel"
 	pack $b.open $b.up -in $b -side left -ipadx 5 -ipady 5 -padx 5 -pady 5
 	pack $b.cancel -in $b -side right -ipadx 5 -ipady 5 -padx 5 -pady 5
     }
