@@ -75,12 +75,13 @@ widget windows_list {
     }
     method retrieve {target window} {
         set result [$self retrieve_$slot(mode) $target $window]
-        if {[catch {
+        set hasbg [lsearch -exact -index 0 [send $target [list $window configure]] -background]
+        if {$hasbg != -1} {
             set old_bg [send $target [list $window cget -background]]
             send $target [list $window configure -background #ff69b4]
             send $target [list after 200 \
                 [list catch [list $window configure -background $old_bg]]]
-        }]} {
+        } else {
             # FIXME: for ttk items toggle state active?
             set restorestate [send $target [list $window state active]]
             send $target [list after 200 [list catch [list $window state $restorestate]]]
